@@ -3,7 +3,7 @@ import numpy as np
 import matplotlib.pylab as plt
 
 
-def relu(x):
+def relu(x):  # rectifiedLinearUnit
     return np.maximum(0, x)
 
 
