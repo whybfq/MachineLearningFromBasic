@@ -3,8 +3,11 @@ import numpy as np
 import matplotlib.pylab as plt
 
 
-def step_function(x):
+def step_function(x):  # x is np.array
+    # y = x > 0
+    # return y.astype(np.int)
     return np.array(x > 0, dtype=np.int)
+
 
 X = np.arange(-5.0, 5.0, 0.1)
 Y = step_function(X)
