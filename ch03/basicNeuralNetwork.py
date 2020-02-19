@@ -19,11 +19,15 @@ def forward(network, x):
 
     a1 = np.dot(x, W1) + b1
     z1 = sigmoid(a1)
+
     a2 = np.dot(z1, W2) + b2
     z2 = sigmoid(a2)
-    a3 = np.dot(z2, W3) + b3
 
+    a3 = np.dot(z2, W3) + b3
     y = a3
+
+    print('a1: {a1}, a2: {a2}, a3: {a3}, \n'
+          'z1: {z1}, z2: {z2}, z3: {z3}'.format(a1=a1, a2=a2, a3=a3, z1=z1, z2=z2, z3=z3))
     return y
 
 
