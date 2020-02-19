@@ -14,20 +14,23 @@ def sigmoid(x):
 
 
 def forward(network, x):
+    # the weight of layer1, layer2 and output layer
     W1, W2, W3 = network['W1'], network['W2'], network['W3']
+    # the bias of layer1, layer2 and output layer
     b1, b2, b3 = network['b1'], network['b2'], network['b3']
-
+    # layer 1
     a1 = np.dot(x, W1) + b1
     z1 = sigmoid(a1)
-
+    # layer 2
     a2 = np.dot(z1, W2) + b2
     z2 = sigmoid(a2)
-
+    # output layer
     a3 = np.dot(z2, W3) + b3
     y = a3
-
-    print('a1: {a1}, a2: {a2}, a3: {a3}, \n'
-          'z1: {z1}, z2: {z2}, z3: {z3}'.format(a1=a1, a2=a2, a3=a3, z1=z1, z2=z2, z3=z3))
+    # test for the ntermediate results
+    print('layer1: a1: {a1}, z1: {z1}; \n'
+          'layer2: a2: {a2}, z2: {z2}; \n'
+          'Output: a3: {a3}, z3: {z3}'.format(a1=a1, a2=a2, a3=a3, z1=z1, z2=z2, z3=y))
     return y
 
 
