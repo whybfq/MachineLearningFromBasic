@@ -4,12 +4,12 @@ import matplotlib.pylab as plt
 
 
 def sigmoid(x):
-    return 1 / (1 + np.exp(-x))    
+    return 1 / (1 + np.exp(-x))
 
 
-def step_function(x):   # x is np.array
-    # y = x > 0
-    # return y.astype(np.int)
+def step_function(x):  # x is np.array
+    #    y = x > 0
+    #   return y.astype(np.int)
     return np.array(x > 0, dtype=np.int)
 
 
