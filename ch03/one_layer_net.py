@@ -58,7 +58,7 @@ def forward(network: dict, x: np.array) -> object:
     W2 = 1 / W1.T  # W2 = network['W2']
     print('W1:{W1}, W2: {W2}'.format(W1=W1, W2=W2))
     # b2 = -c * np.sum(W2)  # plan to add b2 to key2
-    b2 = np.zeros(1)
+    b2 = np.zeros(len(x))
     print('b1:{b1}\nb2: {b2}'.format(b1=b1, b2=b2))
 
     # layer 1

@@ -23,15 +23,22 @@ class OneLayerNet:
     def predict(self, x):
         W1, b1 = self.params['W1'], self.params['b1']  # W1 is the key1, consider to add b1 inside
         W2 = 1 / W1.T  # W2 is from W1
+        # print('W1:{W1}, W2: {W2}'.format(W1=W1, W2=W2))
         b2 = np.zeros(len(x))  # the size if the same as input_size
+        # print('b1:{b1}\nb2: {b2}'.format(b1=b1, b2=b2))
 
         a1 = np.dot(x, W1) + b1
         z1 = h1(a1)
+        print(''
+              # 'a1: {a1}\n'
+              'Cipher(z1): {z1}'.format(a1=a1, z1=z1))  # z1 is the cipher
 
         a2 = np.dot(z1, W2) + b2
-        y = h2(W1, a2)
+        y = h2(W1, a2)  # y = np.linalg.inv(W1.dot(W2)).dot(a2) is the Decrypt text
 
-        print(y)
+        # print('a2: {a2} \n'
+        #       'z2 (Decrypt text) : {z2}'.format(a2=a2, z2=y)
+        #       )
         return y
 
 
@@ -44,4 +51,3 @@ print('Input Plaintext : {}'.format(plaintext))
 
 Decrypted_text = test.predict(plaintext)
 print('Decrypt text : {}'.format(Decrypted_text))
-
