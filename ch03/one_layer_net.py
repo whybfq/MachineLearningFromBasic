@@ -6,31 +6,55 @@ one_layer_two_points.py (BSD Licensed)
 import numpy as np
 
 c = np.pi / 2
+Bits = 100000
 
 
 def init_network():
     network = dict(W1=np.array([[0.1, 0.3, 0.5]]), b1=np.array([c, c, c]))
     return network
 
-
+# activation function
 def h1(x):
     return x
 
 
-def h2(W, a):
+def h2(W, a):  # W is the key1 and a is the output form last layer
     return np.linalg.inv(W.dot(1 / W.T)).dot(a)
 
 
 def forward(network, x):
-    # the weight of layer1, layer2 and output layer
-    W1 = np.array([[2, 5, 99]])  # w1 is the key1
-    # W1 = np.array([np.random.randn(10000)])
+    """
+    forward(network, x)
+
+        The main process of the neural network to forward the process of cipher and decrypt
+
+        Parameters
+        ----------
+        network : array_like
+            An class to initialize the W1 and b1 of the neural network
+        x : ndarray
+            The plain text that input to be decrypted
+
+        Returns
+        -------
+        out : Decrypt text
+
+        Notes
+        -----
+
+        Examples
+        --------
+
+    """
+
+    # W1 = np.array([[2, 5, 99]])  # W1 is the weight of layer1 (key1)
+    W1 = np.array([np.random.randn(Bits)])
 
     W2 = 1 / W1.T  # W2 = network['W2']
     print('W1:{W1}, W2: {W2}'.format(W1=W1, W2=W2))
-    # the bias of layer1, layer2 and output layer
-    b1 = network['b1']  # b1 is the bias and it will be used to make the key1 more complicated
-    b2 = -c * np.sum(W2)  #
+    # b1 = network['b1']  # b1 is the bias of layer1 and it will be used to make the key1 more complicated
+    b1 = np.array([np.random.randn(Bits).astype(int) * c])  # plan to add b1 to key1
+    b2 = -c * np.sum(W2)  # plan to add b2 to key2
     print('b1:{b1}\nb2: {b2}'.format(b1=b1, b2=b2))
 
     # layer 1
