@@ -12,7 +12,7 @@ Bits = 100000  # hidden_size
 
 
 # every possible symbol that can be encrypted
-LETTERS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"  # 26 English alphabets
+LETTERS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"  # if only consider 26 English alphabets
 # LETTERS = """ !"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\]^_`abcdefghijklmnopqrstuvwxyz{|}~"""
 # note the space at the front
 
@@ -69,10 +69,10 @@ def main():  # run the encryption/decryption code on each symbol in the message 
     # deal with the input(plaintext)
     translated = ""  # stores the encrypted/decrypted form of the message
     # tells the program to encrypt or decrypt
-    mode = "encrypt"  # set to 'encrypt' or 'decrypt'
+    mode = "encrypt"  # set to 'encrypt' or 'decrypt' mode
 
     # message = np.array([*string.ascii_lowercase])[3]  #  array(['d'], dtype='<U1')
-    Inputs = "a"  # ord('a')->97,  chr(97)->a
+    Inputs = "abc"  # ord('a')->97,  chr(97)->a
     print(f"Input Plaintext {Inputs}\n")
 
     # cipher every alphabet in the message
@@ -104,7 +104,7 @@ def main():  # run the encryption/decryption code on each symbol in the message 
             translated += symbol
 
     # print the encrypted/decrypted string to the screen
-    print("The cracking code is {}".format(translated))
+    print(f"The cracking code is {translated} ")
 
     # copy the encrypted/decrypted string to the clipboard
     pyperclip.copy(translated)
