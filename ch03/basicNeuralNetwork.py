@@ -33,7 +33,7 @@ class OneLayerNet:
         print(
             # "The dimension of a1 is: {}\n"
             # "And a1 is: {a1}"
-            "Cipher(z1): {z1}".format(a1.shape, a1=a1, z1=z1)
+            "Cipher(z1) : \n{z1}".format(a1.shape, a1=a1, z1=z1)
         )
 
         a2 = np.dot(z1, W2) + b2
@@ -51,19 +51,19 @@ class OneLayerNet:
     def h1(self, x):  # activation function 1
         return x
 
-    def h2(W, a):  # W is the key1 and a is the output form last layer
+    def h2(self, W, a):  # W is the key1 and a is the output form last layer
         return a.dot(np.linalg.inv(W.dot(1 / W.T)))  # have to use a to multiply the inverse matrix of the identity matrix
 
 
 # every possible symbol that can be encrypted
-LETTERS = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'  # 26 English alphabets
+LETTERS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"  # 26 English alphabets
 # LETTERS = ' !"#$%&\'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`abcdefghijklmnopqrstuvwxyz{|}~'
 
 # message = np.array([*string.ascii_lowercase])[3]  #  array(['d'], dtype='<U1')
-letters = 'a'
-numbers = [ord(letter) - 96 for letter in letters]
-message = np.array([1])   # eg: np.array([[1, 2]]), np.array([[[1, 2, 3]]])
-print("Input Plaintext {} and the dimension is: {}".format(message, message.shape))
+Inputs = 'a'  # ord('a')->97,  chr(97)->a
+numbers = [ord(letter) for letter in Inputs]
+message = np.array(numbers)   # eg: np.array([[1, 2]]), np.array([[[1, 2, 3]]])
+print("Input Plaintext {}\nAnd the dimension is: {}".format(Inputs, message.shape))
 
 # tells the program to encrypt or decrypt
 mode = 'encrypt'  # set to 'encrypt' or 'decrypt'
@@ -75,8 +75,8 @@ mode = 'encrypt'  # set to 'encrypt' or 'decrypt'
 input_size, hidden_size, output_size = message.ndim, Bits, message.ndim
 test: OneLayerNet = OneLayerNet(input_size, hidden_size, output_size)
 
-Decrypted_text = test.predict(message)
-print('Decrypt text : {}'.format(Decrypted_text))
+Decrypted_text = test.predict(message).astype(int)
+print('Decrypt text : {}'.format(chr(Decrypted_text.__int__())))
 
 
 # run the encryption/decryption code on each symbol in the message string
