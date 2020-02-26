@@ -55,58 +55,19 @@ class OneLayerNet:
         return a.dot(np.linalg.inv(W.dot(1 / W.T)))  # have to use a to multiply the inverse matrix of the identity matrix
 
 
-# every possible symbol that can be encrypted
-LETTERS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"  # 26 English alphabets
-# LETTERS = ' !"#$%&\'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`abcdefghijklmnopqrstuvwxyz{|}~'
-
 # message = np.array([*string.ascii_lowercase])[3]  #  array(['d'], dtype='<U1')
-Inputs = 'a'  # ord('a')->97,  chr(97)->a
-numbers = [ord(letter) for letter in Inputs]
-message = np.array(numbers)   # eg: np.array([[1, 2]]), np.array([[[1, 2, 3]]])
-print("Input Plaintext {}\nAnd the dimension is: {}".format(Inputs, message.shape))
-
-# tells the program to encrypt or decrypt
-mode = 'encrypt'  # set to 'encrypt' or 'decrypt'
-
+# Inputs = 'a'  # ord('a')->97,  chr(97)->a
 # capitalize the string in message
-# message = message.upper()
+# Inputs = Inputs.upper()
+# numbers = [ord(letter) for letter in Inputs]
+message = np.array([[[1, 2, 3]]])   # eg: np.array([[1, 2]]), np.array([[[1, 2, 3]]])
+print("Input Plaintext {}\nAnd the dimension is: {}".format(message, message.shape))
+
 
 # initialize the neural network
 input_size, hidden_size, output_size = message.ndim, Bits, message.ndim
 test: OneLayerNet = OneLayerNet(input_size, hidden_size, output_size)
 
 Decrypted_text = test.predict(message).astype(int)
-print('Decrypt text : {}'.format(chr(Decrypted_text.__int__())))
-
-
-# run the encryption/decryption code on each symbol in the message string
-# for symbol in message:
-#     if symbol in LETTERS:
-#         # get the encrypted (or decrypted) number for this symbol
-#         num = LETTERS.find(symbol)  # get the number of the symbol
-#         if mode == 'encrypt':
-#             num = (num + key) % len(LETTERS)
-#         elif mode == 'decrypt':
-#             num = (num - key) % len(LETTERS)
-#         else:
-#             print('mode can only be encrypt or decrypt!')
-#
-#         # handle the wrap-around if num is larger than the length of
-#         # LETTERS or less than 0
-#         if num >= len(LETTERS):
-#             num = num - len(LETTERS)
-#         elif num < 0:
-#             num = num + len(LETTERS)
-#
-#         # add encrypted/decrypted number's symbol at the end of translated
-#         translated += LETTERS[num]
-#
-#     else:
-#         # just add the symbol without encrypting/decrypting
-#         translated += symbol
-
-# print the encrypted/decrypted string to the screen
-# print(translated)
-
-# copy the encrypted/decrypted string to the clipboard
-# pyperclip.copy(translated)
+# Decrypted_text = chr(Decrypted_text.__int__())
+print('Decrypt text : {}'.format(Decrypted_text))

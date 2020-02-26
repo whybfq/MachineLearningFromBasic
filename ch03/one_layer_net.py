@@ -80,7 +80,7 @@ def forward(network: dict, x: np.array) -> object:
 
 network = init_network()
 
-x = np.array([23.0])
+x = np.array([23.0])   # eg: np.array([[1, 2]]), np.array([[[1, 2, 3]]])
 print('Input Plaintext : {}'.format(x))
 
 y = forward(network, x)
