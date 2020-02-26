@@ -13,7 +13,8 @@ Bits = 100000  # hidden_size
 
 # every possible symbol that can be encrypted
 LETTERS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"  # 26 English alphabets
-# LETTERS = ' !"#$%&\'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`abcdefghijklmnopqrstuvwxyz{|}~'
+# LETTERS = """ !"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\]^_`abcdefghijklmnopqrstuvwxyz{|}~"""
+# note the space at the front
 
 
 class OneLayerNet:
@@ -71,26 +72,27 @@ def main():  # run the encryption/decryption code on each symbol in the message 
     mode = "encrypt"  # set to 'encrypt' or 'decrypt'
 
     # message = np.array([*string.ascii_lowercase])[3]  #  array(['d'], dtype='<U1')
-    Inputs = "abcdeda"  # ord('a')->97,  chr(97)->a
-
-    # Inputs = Inputs.upper()  # capitalize the string in message
-    numbers = [ord(letter) for letter in Inputs]
-
-    message = np.array([numbers])  # eg: np.array([[1, 2]]), np.array([[[1, 2, 3]]]),
-    print("Input Plaintext {}\nAnd the dimension is: {}".format(Inputs, message.shape))
+    Inputs = "a"  # ord('a')->97,  chr(97)->a
+    print(f"Input Plaintext {Inputs}\n")
 
     # cipher every alphabet in the message
     for symbol in Inputs:
-        if symbol in LETTERS:
+        if symbol.upper() in LETTERS:   # capitalize the string in message
+            message = np.array([ord(symbol)])  # eg: np.array([[1, 2]]), np.array([[[1, 2, 3]]]),
+            # print("Input Plaintext {}\nAnd the dimension is: {}".format(Inputs, message.shape))
+
             if mode == "encrypt":
                 # initialize the neural network
                 input_size, hidden_size, output_size = message.ndim, Bits, message.ndim
                 test: OneLayerNet = OneLayerNet(input_size, hidden_size, output_size)
 
                 Decrypted_text = test.predict(message)
-                print('Decrypt text : {}'.format(chr(Decrypted_text.__int__())))
+                Decrypted_text = chr(Decrypted_text.__int__())
+                # print('Decrypt text : {}'.format(Decrypted_text))
+
             elif mode == 'decrypt':
                 pass
+
             else:
                 print('mode can only be encrypt or decrypt!')
 
