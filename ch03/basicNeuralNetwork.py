@@ -2,6 +2,7 @@
 """
 basicNeuralNetwork.py (BSD Licensed)
 © 2020 (littlesanner@gmail.com)
+version: 0.0.1
 """
 import numpy as np
 import string
