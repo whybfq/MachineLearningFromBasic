@@ -1,4 +1,3 @@
-
 # coding: utf-8
 """
 one_layer_two_points.py (BSD Licensed)
