@@ -1,15 +1,9 @@
 import numpy as np
+import string
+import pyperclip
 
-# c = np.pi / 2
+c = np.pi / 2
 Bits = 100000  # hidden_size
-
-
-def h1(x):  # activation function 1
-    return x
-
-
-def h2(W, a):  # W is the key1 and a is the output form last layer
-    return a.dot(np.linalg.inv(W.dot(1 / W.T)))   # have to use a to multiply the inverse matrix of the identity matrix
 
 
 class OneLayerNet:
@@ -35,7 +29,7 @@ class OneLayerNet:
         # print('b1:{b1}\nb2: {b2}'.format(b1=b1, b2=b2))
 
         a1 = np.dot(x, W1) + b1
-        z1 = h1(a1)  # z1 is the cipher
+        z1 = self.h1(a1)  # z1 is the cipher
         print(
             # "The dimension of a1 is: {}\n"
             # "And a1 is: {a1}"
@@ -43,7 +37,7 @@ class OneLayerNet:
         )
 
         a2 = np.dot(z1, W2) + b2
-        z2 = h2(W1, a2)  # z2 = np.linalg.inv(W1.dot(W2)).dot(a2) is the Decrypted text
+        z2 = self.h2(W1, a2)  # z2 = np.linalg.inv(W1.dot(W2)).dot(a2) is the Decrypted text
 
         # print(
         #     "The dimension of a2 is: {d1}\n"
@@ -54,13 +48,65 @@ class OneLayerNet:
 
         return z2
 
+    def h1(self, x):  # activation function 1
+        return x
 
-plaintext = np.array([1])   # eg: np.array([[1, 2]]), np.array([[[1, 2, 3]]])
-print("Input Plaintext {} and the dimension is: {}".format(plaintext, plaintext.shape))
+    def h2(W, a):  # W is the key1 and a is the output form last layer
+        return a.dot(np.linalg.inv(W.dot(1 / W.T)))  # have to use a to multiply the inverse matrix of the identity matrix
+
+
+# every possible symbol that can be encrypted
+LETTERS = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'  # 26 English alphabets
+# LETTERS = ' !"#$%&\'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`abcdefghijklmnopqrstuvwxyz{|}~'
+
+# message = np.array([*string.ascii_lowercase])[3]  #  array(['d'], dtype='<U1')
+letters = 'a'
+numbers = [ord(letter) - 96 for letter in letters]
+message = np.array([1])   # eg: np.array([[1, 2]]), np.array([[[1, 2, 3]]])
+print("Input Plaintext {} and the dimension is: {}".format(message, message.shape))
+
+# tells the program to encrypt or decrypt
+mode = 'encrypt'  # set to 'encrypt' or 'decrypt'
+
+# capitalize the string in message
+# message = message.upper()
 
 # initialize the neural network
-input_size, hidden_size, output_size = plaintext.ndim, Bits, plaintext.ndim
+input_size, hidden_size, output_size = message.ndim, Bits, message.ndim
 test: OneLayerNet = OneLayerNet(input_size, hidden_size, output_size)
 
-Decrypted_text = test.predict(plaintext)
+Decrypted_text = test.predict(message)
 print('Decrypt text : {}'.format(Decrypted_text))
+
+
+# run the encryption/decryption code on each symbol in the message string
+# for symbol in message:
+#     if symbol in LETTERS:
+#         # get the encrypted (or decrypted) number for this symbol
+#         num = LETTERS.find(symbol)  # get the number of the symbol
+#         if mode == 'encrypt':
+#             num = (num + key) % len(LETTERS)
+#         elif mode == 'decrypt':
+#             num = (num - key) % len(LETTERS)
+#         else:
+#             print('mode can only be encrypt or decrypt!')
+#
+#         # handle the wrap-around if num is larger than the length of
+#         # LETTERS or less than 0
+#         if num >= len(LETTERS):
+#             num = num - len(LETTERS)
+#         elif num < 0:
+#             num = num + len(LETTERS)
+#
+#         # add encrypted/decrypted number's symbol at the end of translated
+#         translated += LETTERS[num]
+#
+#     else:
+#         # just add the symbol without encrypting/decrypting
+#         translated += symbol
+
+# print the encrypted/decrypted string to the screen
+# print(translated)
+
+# copy the encrypted/decrypted string to the clipboard
+# pyperclip.copy(translated)
