@@ -1,8 +1,3 @@
-# coding: utf-8
-"""
-one_layer_two_points.py (BSD Licensed)
-© 2020 (littlesanner@gmail.com)
-"""
 import numpy as np
 import string
 import pyperclip
@@ -60,25 +55,19 @@ class OneLayerNet:
         return a.dot(np.linalg.inv(W.dot(1 / W.T)))  # have to use a to multiply the inverse matrix of the identity matrix
 
 
-# every possible symbol that can be encrypted
-LETTERS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"  # 26 English alphabets
-# LETTERS = ' !"#$%&\'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`abcdefghijklmnopqrstuvwxyz{|}~'
-
 # message = np.array([*string.ascii_lowercase])[3]  #  array(['d'], dtype='<U1')
-Inputs = 'a'  # ord('a')->97,  chr(97)->a
+# Inputs = 'a'  # ord('a')->97,  chr(97)->a
 # capitalize the string in message
 # Inputs = Inputs.upper()
-numbers = [ord(letter) for letter in Inputs]
-message = np.array(numbers)   # eg: np.array([[1, 2]]), np.array([[[1, 2, 3]]])
-print("Input Plaintext {}\nAnd the dimension is: {}".format(Inputs, message.shape))
-
-# tells the program to encrypt or decrypt
-mode = 'encrypt'  # set to 'encrypt' or 'decrypt'
+# numbers = [ord(letter) for letter in Inputs]
+message = np.array([[1, 2 ]])   # eg: np.array([[1, 2]]), np.array([[[1, 2, 3]]])
+print("Input Plaintext {}\nAnd the dimension is: {}".format(message, message.shape))
 
 
 # initialize the neural network
 input_size, hidden_size, output_size = message.ndim, Bits, message.ndim
 test: OneLayerNet = OneLayerNet(input_size, hidden_size, output_size)
 
-Decrypted_text = test.predict(message).astype(int)
-print('Decrypt text : {}'.format(chr(Decrypted_text.__int__())))
+Decrypted_text = test.predict(message)
+# Decrypted_text = chr(Decrypted_text.__int__())
+print('Decrypt text : {}'.format(Decrypted_text))
