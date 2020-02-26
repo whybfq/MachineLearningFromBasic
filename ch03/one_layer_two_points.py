@@ -1,3 +1,9 @@
+
+# coding: utf-8
+"""
+one_layer_two_points.py (BSD Licensed)
+© 2020 (littlesanner@gmail.com)
+"""
 import numpy as np
 
 
