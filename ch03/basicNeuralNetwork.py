@@ -1,45 +1,47 @@
 import numpy as np
+c = np.pi / 2
+Bits = 100000  # hidden_size
 
 
-def init_network():
-    network = {'W1': np.array([[0.1, 0.3, 0.5], [0.2, 0.4, 0.6]]), 'b1': np.array([0.1, 0.2, 0.3]),
-               'W2': np.array([[0.1, 0.4], [0.2, 0.5], [0.3, 0.6]]), 'b2': np.array([0.1, 0.2]),
-               'W3': np.array([[0.1, 0.3], [0.2, 0.4]]), 'b3': np.array([0.1, 0.2])}
-
-    return network
+def h1(x):  # activation function 1
+    return x
 
 
-def sigmoid(x):
-    return 1 / (1 + np.exp(-x))
+def h2(W, a):  # W is the key1 and a is the output form last layer
+    return np.linalg.inv(W.dot(1 / W.T)).dot(a)
 
 
-def forward(network, x):
-    # the weight of layer1, layer2 and output layer
-    W1, W2, W3 = network['W1'], network['W2'], network['W3']
-    # the bias of layer1, layer2 and output layer
-    b1, b2, b3 = network['b1'], network['b2'], network['b3']
-    # layer 1
-    a1 = np.dot(x, W1) + b1
-    z1 = sigmoid(a1)
-    # layer 2
-    a2 = np.dot(z1, W2) + b2
-    z2 = sigmoid(a2)
-    # output layer
-    a3 = np.dot(z2, W3) + b3
-    y = a3
-    # test for the ntermediate results
-    print('layer1: a1: {a1}, z1: {z1}; \n'
-          'layer2: a2: {a2}, z2: {z2}; \n'
-          'Output: a3: {a3}, z3: {z3}'.format(a1=a1, a2=a2, a3=a3, z1=z1, z2=z2, z3=y))
-    return y
+class OneLayerNet:
+
+    def __init__(self, input_size: int, hidden_size: int, output_size: int, weight_init_std=0.01):
+        # initialize the weight and bias
+        self.params = dict(
+            W1=weight_init_std * np.random.randn(input_size, hidden_size),
+            b1=np.zeros(hidden_size)
+        )
+
+    def predict(self, x):
+        W1, b1 = self.params['W1'], self.params['b1']  # W1 is the key1, consider to add b1 inside
+        W2 = 1 / W1.T  # W2 is from W1
+        b2 = np.zeros(len(x))  # the size if the same as input_size
+
+        a1 = np.dot(x, W1) + b1
+        z1 = h1(a1)
+
+        a2 = np.dot(z1, W2) + b2
+        y = h2(W1, a2)
+
+        print(y)
+        return y
 
 
-def softmax(a):
-    c = np.max(a)
-    return np.exp(a - c) / np.sum(np.exp(a - c))
+# initialize the neural network
+input_size, hidden_size, output_size = 1, Bits, 1
+test: OneLayerNet = OneLayerNet(input_size, hidden_size, output_size)
 
+plaintext = np.array([97])
+print('Input Plaintext : {}'.format(plaintext))
 
-network = init_network()
-x = np.array([1.0, 0.5])
-y = forward(network, x)
-print(y)
+Decrypted_text = test.predict(plaintext)
+print('Decrypt text : {}'.format(Decrypted_text))
+
