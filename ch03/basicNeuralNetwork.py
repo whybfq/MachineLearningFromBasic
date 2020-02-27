@@ -8,6 +8,7 @@ version: 0.0.1
 import time
 import numpy as np
 import pyperclip
+import sys
 
 c = np.pi / 2
 Bits = 10  # hidden_size
@@ -37,7 +38,7 @@ LETTERS = """ !"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\]^_`ab
 # note the space at the front
 
 
-class OneLayerNet:
+class OneLayerNet:  # including encryptMessage() and decryptMessage()
 
     def __init__(self, input_size: int, hidden_size: int, output_size: int, weight_init_std=0.01):
         # initialize the weight and bias
@@ -83,6 +84,16 @@ class OneLayerNet:
         # )
 
         return z2
+
+    def checkKeys(self, keyA, keyB, mode):
+        keyA = self.params['W1'] + self.params['b1']
+        keyB = 1 / keyA.T + self.params['b1']
+        if keyA == 1 and mode == 'encrypt':
+            sys.exit('The affine cipher becomes incredibly weak when key A is set to 1. Choose a different key.')
+        if keyB == 0 and mode == 'encrypt':
+            sys.exit('The affine cipher becomes incredibly weak when key B is set to 0. Choose a different key.')
+        # if keyA < 0 or keyB < 0 or keyB > len(LETTERS) - 1:
+        #     sys.exit('Key A must be greater than 0 and Key B must be between 0 and %s.' % (len(LETTERS) - 1))
 
 
 @calculate_time
