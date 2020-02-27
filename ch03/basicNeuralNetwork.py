@@ -26,7 +26,7 @@ def calculate_time(func):
 
         # storing time after function execution
         end = time.time()
-        print("{} function total time taken in : {} seconds".format(func.__name__, end - begin) )
+        print(f"{func.__name__} function total time taken in : {end - begin} seconds")
 
     return inner1
 
