@@ -39,6 +39,26 @@ LETTERS = """ !"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\]^_`ab
 # note the space at the front
 
 
+def makeKeyFiles(name, matrix):
+    # Creates two files 'x_pubkey.txt' and 'x_privkey.txt' (where x is the
+    # value in name) with the the n,e and d,e integers written in them,
+    # delimited by a comma.
+
+    # Our safety check will prevent us from overwriting our old key files:
+    # write name (eg keyA.txt)
+    if os.path.exists(name):
+        print(f"WARNING: The file {name} exists! \n"
+              "Use a different name or delete these files and re-run this program.")
+        sys.exit()
+    print()
+    print(f"The matrix's dimension is {matrix.shape} ")
+    print(f'Writing to file {name}...')
+    fo = open(f'{name}', 'w')
+    # the content of keyA.txt
+    fo.write(f'{matrix}')
+    fo.close()
+
+
 class OneLayerNet:  # including encryptMessage() and decryptMessage()
 
     def __init__(self, input_size: int, hidden_size: int, output_size: int, weight_init_std=0.01):
@@ -67,17 +87,7 @@ class OneLayerNet:  # including encryptMessage() and decryptMessage()
         # print(f'b1:{b1}\nb2: {b2}')
 
         # write keyA.txt
-        if os.path.exists('KeyA.txt'):
-            print("WARNING: The file KeyA.txt exists! \n"
-                  "Use a different name or delete these files and re-run this program.")
-            sys.exit()
-        print()
-        print(f"The KeyA's dimension is {W1.shape} ")
-        print('Writing public key to file keyA.txt...')
-        fo = open('keyA.txt', 'w')
-        # the content of keyA.txt
-        fo.write(f'{W1}')
-        fo.close()
+        makeKeyFiles("keyAA.txt", W1)
 
         a1 = np.dot(x, W1) + b1
         z1 = self.h1(a1)  # z1 is the cipher
