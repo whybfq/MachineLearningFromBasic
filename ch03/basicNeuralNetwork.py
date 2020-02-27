@@ -32,8 +32,8 @@ def calculate_time(func):
 
 
 # every possible symbol that can be encrypted
-LETTERS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"  # if only consider 26 English alphabets
-# LETTERS = """ !"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\]^_`abcdefghijklmnopqrstuvwxyz{|}~"""
+# LETTERS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"  # if only consider 26 English alphabets
+LETTERS = """ !"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\]^_`abcdefghijklmnopqrstuvwxyz{|}~"""
 # note the space at the front
 
 
@@ -56,7 +56,7 @@ class OneLayerNet:
             "The dimension of W2 is {d2}\n"
             "And W2(key2) is: {W2}".format(d1=W1.shape, W1=W1, d2=W2.shape, W2=W2)
         )
-        # print('b1:{b1}\nb2: {b2}'.format(b1=b1, b2=b2))
+        # print(f'b1:{b1}\nb2: {b2}')
 
         a1 = np.dot(x, W1) + b1
         z1 = self.h1(a1)  # z1 is the cipher
@@ -94,13 +94,14 @@ def main():
 
     # message = np.array([*string.ascii_lowercase])[3]  #  array(['d'], dtype='<U1')
     Inputs = "a"  # ord('a')->97,  chr(97)->a
+    # Inputs = Inputs.upper()  # capitalize the string in message if only consider 26 big alphabets
     print(f"Input Plaintext {Inputs}\n")
 
     # run the encryption/decryption code on each symbol in the message string
     for symbol in Inputs:
-        if symbol.upper() in LETTERS:   # capitalize the string in message
+        if symbol in LETTERS:
             message = np.array([ord(symbol)])  # eg: np.array([[1, 2]]), np.array([[[1, 2, 3]]]),
-            # print("Input Plaintext {}\nAnd the dimension is: {}".format(Inputs, message.shape))
+            # print(f"Input Plaintext {Inputs}\nAnd the dimension is: {message.shape}")
 
             if mode == "encrypt":
                 # initialize the neural network
@@ -109,7 +110,7 @@ def main():
 
                 Decrypted_text = test.predict(message)
                 Decrypted_text = chr(Decrypted_text.__int__())
-                # print('Decrypt text : {}'.format(Decrypted_text))
+                # print(f'Decrypt text : {Decrypted_text}')
 
             elif mode == 'decrypt':
                 pass
