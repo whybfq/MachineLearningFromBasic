@@ -9,6 +9,7 @@ import time
 import numpy as np
 import pyperclip
 import sys
+import os
 
 c = np.pi / 2
 Bits = 10  # hidden_size
@@ -51,27 +52,52 @@ class OneLayerNet:  # including encryptMessage() and decryptMessage()
     def h1(self, x):  # activation function 1
         return x
 
-    def h2(self, a, W):  # W is the key1 and a is the output form last layer
+    def h2(self, a, W):  # W is the KeyA and a is the output form last layer
         return a.dot(np.linalg.inv(W.dot(1 / W.T)))  # have to use a to multiply the inverse matrix of the identity matrix
 
     def predict(self, x):
         W1, b1, b2 = self.params['W1'], self.params['b1'], self.params['b2']
         W2 = 1 / W1.T  # W2 is from W1
-        print(
-            "The dimension of W1 is {d1}\n"
-            "And W1(key1) is: {W1}\n"
-            "The dimension of W2 is {d2}\n"
-            "And W2(key2) is: {W2}".format(d1=W1.shape, W1=W1, d2=W2.shape, W2=W2)
-        )
+        # print(
+        #     "The dimension of W1 is {d1}\n"
+        #     "And W1(keyA) is: {W1}\n"
+        #     "The dimension of W2 is {d2}\n"
+        #     "And W2(keyB) is: {W2}".format(d1=W1.shape, W1=W1, d2=W2.shape, W2=W2)
+        # )
         # print(f'b1:{b1}\nb2: {b2}')
+
+        # write keyA.txt
+        if os.path.exists('KeyA.txt'):
+            print("WARNING: The file KeyA.txt exists! \n"
+                  "Use a different name or delete these files and re-run this program.")
+            sys.exit()
+        print()
+        print(f"The KeyA's dimension is {W1.shape} ")
+        print('Writing public key to file keyA.txt...')
+        fo = open('keyA.txt', 'w')
+        # the content of keyA.txt
+        fo.write(f'{W1}')
+        fo.close()
 
         a1 = np.dot(x, W1) + b1
         z1 = self.h1(a1)  # z1 is the cipher
-        print(
-            # "The dimension of a1 is: {}\n"
-            # "And a1 is: {a1}"
-            "Cipher text(z1) : \n{z1}".format(a1.shape, a1=a1, z1=z1)
-        )
+        # print(
+        #     # "The dimension of a1 is: {}\n"
+        #     # "And a1 is: {a1}"
+        #     "Cipher text(z1) : \n{z1}".format(a1.shape, a1=a1, z1=z1)
+        # )
+        # write Cipher.txt
+        if os.path.exists('Cipher.txt'):
+            print("WARNING: The file Cipher.txt exists! \n"
+                  "Use a different name or delete these files and re-run this program.")
+            sys.exit()
+        print()
+        print(f"The cipher's dimension is {z1.shape} ")
+        print('Writing cipher to Cipher.txt...')
+        fo = open('Cipher.txt', 'w')
+        # the content of keyA.txt
+        fo.write(f'{z1}')
+        fo.close()
 
         a2 = np.dot(z1, W2) + b2
         z2 = self.h2(a2, W1)  # z2 = np.linalg.inv(W1.dot(W2)).dot(a2) is the Decrypted text
@@ -82,6 +108,19 @@ class OneLayerNet:  # including encryptMessage() and decryptMessage()
         #     "The dimension of z2 is {d2}\n"
         #     "And z2(Decrypt text) is: {z2}\n".format(d1=a2.shape, a2=a2, d2=z2.shape, z2=z2)
         # )
+
+        # write keyB.txt
+        if os.path.exists('KeyB.txt'):
+            print("WARNING: The file KeyA.txt exists! \n"
+                  "Use a different name or delete these files and re-run this program.")
+            sys.exit()
+        print()
+        print(f"The KeyB's dimension is {W2.shape} ")
+        print('Writing private key to file keyB.txt...')
+        fo = open('keyB.txt', 'w')
+        # the content of keyA.txt
+        fo.write(f'{W2}')
+        fo.close()
 
         return z2
 
@@ -106,7 +145,7 @@ def main():
     # message = np.array([*string.ascii_lowercase])[3]  #  array(['d'], dtype='<U1')
     Inputs = "a"  # ord('a')->97,  chr(97)->a
     # Inputs = Inputs.upper()  # capitalize the string in message if only consider 26 big alphabets
-    print(f"Input Plaintext {Inputs}\n")
+    print(f"Input Plaintext {Inputs}")
 
     # run the encryption/decryption code on each symbol in the message string
     for symbol in Inputs:
