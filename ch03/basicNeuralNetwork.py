@@ -12,7 +12,7 @@ import sys
 import os
 
 c = np.pi / 2
-Bits = 10  # hidden_size
+Bits = 100000  # hidden_size
 
 
 # decorator to calculate duration taken by any function.
@@ -87,7 +87,7 @@ class OneLayerNet:  # including encryptMessage() and decryptMessage()
         # print(f'b1:{b1}\nb2: {b2}')
 
         # write keyA.txt
-        makeKeyFiles("keyAA.txt", W1)
+        makeKeyFiles("keyA.txt", W1)
 
         a1 = np.dot(x, W1) + b1
         z1 = self.h1(a1)  # z1 is the cipher
@@ -96,18 +96,20 @@ class OneLayerNet:  # including encryptMessage() and decryptMessage()
         #     # "And a1 is: {a1}"
         #     "Cipher text(z1) : \n{z1}".format(a1.shape, a1=a1, z1=z1)
         # )
+
         # write Cipher.txt
-        if os.path.exists('Cipher.txt'):
-            print("WARNING: The file Cipher.txt exists! \n"
-                  "Use a different name or delete these files and re-run this program.")
-            sys.exit()
-        print()
-        print(f"The cipher's dimension is {z1.shape} ")
-        print('Writing cipher to Cipher.txt...')
-        fo = open('Cipher.txt', 'w')
-        # the content of keyA.txt
-        fo.write(f'{z1}')
-        fo.close()
+        # if os.path.exists('Cipher.txt'):
+        #     print("WARNING: The file Cipher.txt exists! \n"
+        #           "Use a different name or delete these files and re-run this program.")
+        #     sys.exit()
+        # print()
+        # print(f"The cipher's dimension is {z1.shape} ")
+        # print('Writing cipher to Cipher.txt...')
+        # fo = open('Cipher.txt', 'w')
+        # # the content of keyA.txt
+        # fo.write(f'{z1}')
+        # fo.close()
+        makeKeyFiles("Cipher.txt", z1)
 
         a2 = np.dot(z1, W2) + b2
         z2 = self.h2(a2, W1)  # z2 = np.linalg.inv(W1.dot(W2)).dot(a2) is the Decrypted text
@@ -120,17 +122,18 @@ class OneLayerNet:  # including encryptMessage() and decryptMessage()
         # )
 
         # write keyB.txt
-        if os.path.exists('KeyB.txt'):
-            print("WARNING: The file KeyA.txt exists! \n"
-                  "Use a different name or delete these files and re-run this program.")
-            sys.exit()
-        print()
-        print(f"The KeyB's dimension is {W2.shape} ")
-        print('Writing private key to file keyB.txt...')
-        fo = open('keyB.txt', 'w')
-        # the content of keyA.txt
-        fo.write(f'{W2}')
-        fo.close()
+        # if os.path.exists('KeyB.txt'):
+        #     print("WARNING: The file KeyA.txt exists! \n"
+        #           "Use a different name or delete these files and re-run this program.")
+        #     sys.exit()
+        # print()
+        # print(f"The KeyB's dimension is {W2.shape} ")
+        # print('Writing private key to file keyB.txt...')
+        # fo = open('keyB.txt', 'w')
+        # # the content of keyB.txt
+        # fo.write(f'{W2}')
+        # fo.close()
+        makeKeyFiles("KeyB.txt", W2)
 
         return z2
 
