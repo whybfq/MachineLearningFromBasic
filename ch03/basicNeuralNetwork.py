@@ -1,6 +1,6 @@
 # coding: utf-8
 """
-basicNeuralNetwork.py (BSD Licensed)
+basicNeuralNetwork.py (BSD Licensed) : only use one layer
 © 2020 (littlesanner@gmail.com)
 version: 0.0.1
 """
@@ -47,6 +47,12 @@ class OneLayerNet:
             b2=np.zeros(output_size)  # the size if the same as input_size
         )
 
+    def h1(self, x):  # activation function 1
+        return x
+
+    def h2(self, a, W):  # W is the key1 and a is the output form last layer
+        return a.dot(np.linalg.inv(W.dot(1 / W.T)))  # have to use a to multiply the inverse matrix of the identity matrix
+
     def predict(self, x):
         W1, b1, b2 = self.params['W1'], self.params['b1'], self.params['b2']
         W2 = 1 / W1.T  # W2 is from W1
@@ -67,7 +73,7 @@ class OneLayerNet:
         )
 
         a2 = np.dot(z1, W2) + b2
-        z2 = self.h2(W1, a2)  # z2 = np.linalg.inv(W1.dot(W2)).dot(a2) is the Decrypted text
+        z2 = self.h2(a2, W1)  # z2 = np.linalg.inv(W1.dot(W2)).dot(a2) is the Decrypted text
 
         # print(
         #     "The dimension of a2 is: {d1}\n"
@@ -77,12 +83,6 @@ class OneLayerNet:
         # )
 
         return z2
-
-    def h1(self, x):  # activation function 1
-        return x
-
-    def h2(self, W, a):  # W is the key1 and a is the output form last layer
-        return a.dot(np.linalg.inv(W.dot(1 / W.T)))  # have to use a to multiply the inverse matrix of the identity matrix
 
 
 @calculate_time
