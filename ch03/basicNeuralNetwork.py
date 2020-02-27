@@ -4,12 +4,31 @@ basicNeuralNetwork.py (BSD Licensed)
 © 2020 (littlesanner@gmail.com)
 version: 0.0.1
 """
+
+import time
 import numpy as np
-import string
 import pyperclip
 
 c = np.pi / 2
-Bits = 100000  # hidden_size
+Bits = 10  # hidden_size
+
+
+# decorator to calculate duration taken by any function.
+def calculate_time(func):
+    # added arguments inside the inner1,
+    # if function takes any arguments,
+    # can be added like this.
+    def inner1(*args, **kwargs):
+        # storing time before function execution
+        begin = time.time()
+
+        func(*args, **kwargs)
+
+        # storing time after function execution
+        end = time.time()
+        print("{} function total time taken in : {} seconds".format(func.__name__, end - begin) )
+
+    return inner1
 
 
 # every possible symbol that can be encrypted
@@ -66,17 +85,18 @@ class OneLayerNet:
         return a.dot(np.linalg.inv(W.dot(1 / W.T)))  # have to use a to multiply the inverse matrix of the identity matrix
 
 
-def main():  # run the encryption/decryption code on each symbol in the message string
-    # deal with the input(plaintext)
+@calculate_time
+def main():
+    """the main process"""
     translated = ""  # stores the encrypted/decrypted form of the message
     # tells the program to encrypt or decrypt
     mode = "encrypt"  # set to 'encrypt' or 'decrypt' mode
 
     # message = np.array([*string.ascii_lowercase])[3]  #  array(['d'], dtype='<U1')
-    Inputs = "abc"  # ord('a')->97,  chr(97)->a
+    Inputs = "a"  # ord('a')->97,  chr(97)->a
     print(f"Input Plaintext {Inputs}\n")
 
-    # cipher every alphabet in the message
+    # run the encryption/decryption code on each symbol in the message string
     for symbol in Inputs:
         if symbol.upper() in LETTERS:   # capitalize the string in message
             message = np.array([ord(symbol)])  # eg: np.array([[1, 2]]), np.array([[[1, 2, 3]]]),
@@ -113,4 +133,3 @@ def main():  # run the encryption/decryption code on each symbol in the message 
 
 if __name__ == '__main__':
     main()
-
