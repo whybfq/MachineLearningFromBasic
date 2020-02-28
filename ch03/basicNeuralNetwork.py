@@ -11,7 +11,7 @@ import pyperclip
 import sys
 import os
 
-c = np.pi / 2   # consider to use sin()/cos() to b, need to test and design
+c = np.pi / 2  # consider to use sin()/cos() to b, need to test and design
 Bits = 100000  # hidden_size
 
 
@@ -36,6 +36,8 @@ def calculate_time(func):
 # every possible symbol that can be encrypted
 # LETTERS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"  # if only consider 26 English alphabets
 LETTERS = """ !"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\]^_`abcdefghijklmnopqrstuvwxyz{|}~"""
+
+
 # note the space at the front
 
 
@@ -71,10 +73,11 @@ class OneLayerNet:  # including encryptMessage() and decryptMessage()
         return x
 
     def h2(self, a, W):  # W is the KeyA and a is the output form last layer
-        return a.dot(np.linalg.inv(W.dot(1 / W.T)))  # have to use a to multiply the inverse matrix of the identity matrix
+        return a.dot(
+            np.linalg.inv(W.dot(1 / W.T)))  # have to use a to multiply the inverse matrix of the identity matrix
 
     def predict(self, x):
-        W1, b1, b2 = self.params['W1'], self.params['b1'], self.params['b2']
+        W1, b1, b2 = self.params[ 'W1' ], self.params[ 'b1' ], self.params[ 'b2' ]
         W2 = 1 / W1.T  # W2 is from W1
         # print(
         #     "The dimension of W1 is {d1}\n"
@@ -136,8 +139,8 @@ class OneLayerNet:  # including encryptMessage() and decryptMessage()
         return z2
 
     def checkKeys(self, keyA, keyB, mode):
-        keyA = self.params['W1'] + self.params['b1']
-        keyB = 1 / keyA.T + self.params['b1']
+        keyA = self.params[ 'W1' ] + self.params[ 'b1' ]
+        keyB = 1 / keyA.T + self.params[ 'b1' ]
         if keyA == 1 and mode == 'encrypt':
             sys.exit('The affine cipher becomes incredibly weak when key A is set to 1. Choose a different key.')
         if keyB == 0 and mode == 'encrypt':
@@ -161,7 +164,7 @@ def main():
     # run the encryption/decryption code on each symbol in the message string
     for symbol in Inputs:
         if symbol in LETTERS:
-            message = np.array([ord(symbol)])  # eg: np.array([[1, 2]]), np.array([[[1, 2, 3]]]),
+            message = np.array([ ord(symbol) ])  # eg: np.array([[1, 2]]), np.array([[[1, 2, 3]]]),
             # print(f"Input Plaintext {Inputs}\nAnd the dimension is: {message.shape}")
 
             if mode == "encrypt":
@@ -173,8 +176,8 @@ def main():
                 Decrypted_text = chr(Decrypted_text.__int__())
                 # print(f'Decrypt text : {Decrypted_text}')
 
-            elif mode == 'decrypt':
-                pass
+            # elif mode == 'decrypt':
+            #     pass
 
             else:
                 print('mode can only be encrypt or decrypt!')
@@ -191,6 +194,39 @@ def main():
 
     # copy the encrypted/decrypted string to the clipboard
     pyperclip.copy(translated)
+
+
+def new_main():
+    myMessage = """"A computer would deserve to be called intelligent if it could deceive a human into believing that it was human." -Alan Turing"""
+    myKey = ""
+    myMode = "encrypt"  # set to 'encrypt' or 'decrypt'
+
+    translated = ""
+    if myMode == 'encrypt':
+        # translated = encryptMessage(myKey, myMessage)
+        for symbol in myMessage:
+            if symbol in LETTERS:
+                message = np.array([ord(symbol)])  # eg: np.array([[1, 2]]), np.array([[[1, 2, 3]]]),
+                # print(f"Input Plaintext {Inputs}\nAnd the dimension is: {message.shape}")
+                # initialize the neural network
+                input_size, hidden_size, output_size = message.ndim, Bits, message.ndim
+                test: OneLayerNet = OneLayerNet(input_size, hidden_size, output_size)
+
+                Decrypted_text = test.predict(message)
+                Decrypted_text = chr(Decrypted_text.__int__())
+                # print(f'Decrypt text : {Decrypted_text}')
+                translated += Decrypted_text
+            else:
+                translated += symbol
+
+    elif myMode == 'decrypt':
+        # translated = decryptMessage(myKey, myMessage)
+        pass
+    print(f'Key: {myKey}')
+    print(f'{myMode.title()}ed text:')
+    print(translated)
+    pyperclip.copy(translated)
+    print(f'Full {myMode}ed text copied to clipboard.')
 
 
 if __name__ == '__main__':
