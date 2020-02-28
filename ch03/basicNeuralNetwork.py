@@ -40,12 +40,10 @@ LETTERS = """ !"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\]^_`ab
 
 
 def makeKeyFiles(name, matrix):
-    # Creates two files 'x_pubkey.txt' and 'x_privkey.txt' (where x is the
-    # value in name) with the the n,e and d,e integers written in them,
-    # delimited by a comma.
-
+    # Creates one file 'name' with the matrix written in it
     # Our safety check will prevent us from overwriting our old key files:
     # write name (eg keyA.txt)
+
     if os.path.exists(name):
         print(f"WARNING: The file {name} exists! \n"
               "Use a different name or delete these files and re-run this program.")
