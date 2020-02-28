@@ -11,7 +11,7 @@ import pyperclip
 import sys
 import os
 
-c = np.pi / 2
+c = np.pi / 2   # consider to use sin()/cos() to b, need to test and design
 Bits = 100000  # hidden_size
 
 
