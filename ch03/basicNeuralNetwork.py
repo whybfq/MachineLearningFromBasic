@@ -230,7 +230,7 @@ def new_main():
             KeyA = test.params['W1']
             key1.append(KeyA.tolist())  # key1 is like the public key if in Asymmetric encryption
             Decrypted_text = test.decrypted(message)
-    print(f'Key: {key1}')
+    print(f'Key1: {key1}')
     print(f'Cipher text: {translated}')
     # print(f'{myMode.title()}ed text:')
     # print(translated)
