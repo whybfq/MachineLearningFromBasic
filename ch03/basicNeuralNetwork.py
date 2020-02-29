@@ -12,7 +12,7 @@ import sys
 import os
 
 c = np.pi / 2  # consider to use sin()/cos() to b, need to test and design
-Bits = 10  # hidden_size
+Bits = 2  # hidden_size
 
 
 # decorator to calculate duration taken by any function.
@@ -41,7 +41,7 @@ LETTERS = """ !"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\]^_`ab
 # note the space at the front
 
 
-def makeKeyFiles(name, matrix):
+def makeKeyFiles(name: str, matrix):
     """
     # Creates one file 'name' with the matrix written in it
     # Our safety check will prevent us from overwriting our old key files:
@@ -50,7 +50,7 @@ def makeKeyFiles(name, matrix):
     """
 
     if os.path.exists(name):
-        print(f"WARNING: The file {name} exists! \n"
+        print(f"WARNING: The file {name} exists!  "
               "Use a different name or delete these files and re-run this program.")
         sys.exit()
     print()
@@ -83,14 +83,13 @@ class OneLayerNet:  # including encryptMessage() and decryptMessage()
         W1, b1 = self.params['W1'], self.params['b1']
         a1 = np.dot(x, W1) + b1
         z1 = self.h1(a1)  # z1 is the cipher
-        makeKeyFiles("Cipher.txt", z1)  # write Cipher.txt
+        return z1
 
     def decrypted(self, z1):
         W1, b2 = self.params['W1'].T, self.params['b2']
         a2 = np.dot(z1, 1 / W1.T) + b2
         z2 = self.h2(a2, W1)  # z2 = np.linalg.inv(W1.dot(W2)).dot(a2) is the Decrypted text
-        # makeKeyFiles("KeyB.txt", W2)  # write keyB.txt
-        # makeKeyFiles("Decrypted.txt", z2)  # write Decrypted.txt
+        return z2
 
     def predict(self, x):
         W1, b1, b2 = self.params['W1'], self.params['b1'], self.params['b2']
@@ -191,10 +190,10 @@ def main():
 @calculate_time
 def new_main():
     # myMessage = """"A computer would deserve to be called intelligent if it could deceive a human into believing that it was human." -Alan Turing"""
-    myMessage = "Hello"
+    myMessage = "Hi"
     myMode = "encrypt"  # set to 'encrypt' or 'decrypt'
 
-    translated = ""
+    key1, translated = [], []
     if myMode == 'encrypt':
         # translated = encryptMessage(myKey, myMessage)
         for symbol in myMessage:
@@ -205,18 +204,34 @@ def new_main():
                 test: OneLayerNet = OneLayerNet(input_size, hidden_size, output_size)
 
                 KeyA = test.params['W1']
-                Decrypted_text = test.encrypted(message)
+                key1.append(KeyA.tolist())  # key1 is like the public key if in Asymmetric encryption
+                Encrypted_text = test.encrypted(message)
                 # Decrypted_text = chr(Decrypted_text.__int__())
                 # print(f'Decrypt text : {Decrypted_text}')
-                # translated += Decrypted_text
-            else:
-                KeyB = ""
-                # translated += symbol
+                translated.append(Encrypted_text.tolist())
+
+            else:  # need to be improved
+                key1.append([])
+                translated += symbol
+        makeKeyFiles("key1.txt", np.asarray(key1))
+        makeKeyFiles("Cipher.txt", np.asarray(translated))
 
     elif myMode == 'decrypt':
         # translated = decryptMessage(myKey, myMessage)
-        pass
-    print(f'Key: {KeyA}')
+        for i in translated:
+            assert isinstance(i, list)
+            message = np.asarray(i)
+            # test.decrypted(key1)
+
+            # initialize the neural network
+            input_size, hidden_size, output_size = message.ndim, Bits, message.ndim
+            test: OneLayerNet = OneLayerNet(input_size, hidden_size, output_size)
+
+            KeyA = test.params['W1']
+            key1.append(KeyA.tolist())  # key1 is like the public key if in Asymmetric encryption
+            Decrypted_text = test.decrypted(message)
+    print(f'Key: {key1}')
+    print(f'Cipher text: {translated}')
     # print(f'{myMode.title()}ed text:')
     # print(translated)
     # pyperclip.copy(translated)
