@@ -12,7 +12,7 @@ import sys
 import os
 
 c = np.pi / 2  # consider to use sin()/cos() to b, need to test and design
-Bits = 2  # hidden_size
+Bits = 3  # hidden_size
 
 
 # decorator to calculate duration taken by any function.
@@ -41,22 +41,22 @@ LETTERS = """ !"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\]^_`ab
 # note the space at the front
 
 
-def makeKeyFiles(name: str, matrix):
+def makeKeyFiles(filename: str, matrix: np) -> np:
     """
     # Creates one file 'name' with the matrix written in it
     # Our safety check will prevent us from overwriting our old key files:
     # write name (eg keyA.txt)
     :arg name: filename
     """
-
-    if os.path.exists(name):
-        print(f"WARNING: The file {name} exists!  "
+    if os.path.exists(filename):
+        print(f"WARNING: The file {filename} exists!  "
               "Use a different name or delete these files and re-run this program.")
         sys.exit()
     print()
-    print(f"The matrix's dimension is {matrix.shape} ")
-    print(f'Writing to file {name}...')
-    fo = open(f'{name}', 'w')
+    if type(matrix) is np.ndarray:  # if isinstance(matrix, np.ndarray)
+        print(f"The matrix's dimension is {matrix.shape} ")
+    print(f'Writing to file {filename}...')
+    fo = open(f'{filename}', 'w')
     fo.write(f'{matrix}')  # the content of "name"(file)
     fo.close()
 
@@ -191,10 +191,11 @@ def main():
 def new_main():
     # myMessage = """"A computer would deserve to be called intelligent if it could deceive a human into believing that it was human." -Alan Turing"""
     myMessage = "Hi"
-    myMode = "encrypt"  # set to 'encrypt' or 'decrypt'
+    Mode = "encrypt"  # set to 'encrypt' or 'decrypt'
+    # Mode = "decrypt"  # set to 'encrypt' or 'decrypt'
 
     key1, translated = [], []
-    if myMode == 'encrypt':
+    if Mode == 'encrypt':
         # translated = encryptMessage(myKey, myMessage)
         for symbol in myMessage:
             if symbol in LETTERS:
@@ -210,32 +211,38 @@ def new_main():
                 # print(f'Decrypt text : {Decrypted_text}')
                 translated.append(Encrypted_text.tolist())
 
-            else:  # need to be improved
-                key1.append([])
-                translated += symbol
-        makeKeyFiles("key1.txt", np.asarray(key1))
-        makeKeyFiles("Cipher.txt", np.asarray(translated))
+            # else:  # need to be improved
+            #     key1.append([])
+            #     translated += symbol
+        makeKeyFiles("key1_Ndarray.txt", np.asarray(key1))  # convert the list to a numpy array
+        makeKeyFiles("Cipher_Ndarray.txt", np.asarray(translated))
+        makeKeyFiles("key1_String.txt", key1)  # key1 is a string
+        makeKeyFiles("Cipher_String.txt", translated)
 
-    elif myMode == 'decrypt':
+    elif Mode == 'decrypt':
+        cipher_text = open("Cipher.txt", 'r')
+        key1 = open("key1.txt", 'r')
         # translated = decryptMessage(myKey, myMessage)
-        for i in translated:
+        for i in cipher_text.readline():
             assert isinstance(i, list)
+            print("Each i: ", i)
             message = np.asarray(i)
+            print("The message is ", message)
             # test.decrypted(key1)
 
             # initialize the neural network
-            input_size, hidden_size, output_size = message.ndim, Bits, message.ndim
-            test: OneLayerNet = OneLayerNet(input_size, hidden_size, output_size)
-
-            KeyA = test.params['W1']
-            key1.append(KeyA.tolist())  # key1 is like the public key if in Asymmetric encryption
-            Decrypted_text = test.decrypted(message)
+            # input_size, hidden_size, output_size = message.ndim, Bits, message.ndim
+            # test: OneLayerNet = OneLayerNet(input_size, hidden_size, output_size)
+            #
+            # KeyA = test.params['W1']
+            # key1.append(KeyA.tolist())  # key1 is like the public key if in Asymmetric encryption
+            # Decrypted_text = test.decrypted(message)
     print(f'Key1: {key1}')
     print(f'Cipher text: {translated}')
-    # print(f'{myMode.title()}ed text:')
-    # print(translated)
+
+
     # pyperclip.copy(translated)
-    # print(f'Full {myMode}ed text copied to clipboard.')
+    # print(f'Full {Mode}ed text copied to clipboard.')
 
 
 if __name__ == '__main__':

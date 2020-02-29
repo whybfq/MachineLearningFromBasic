@@ -78,10 +78,27 @@ def forward(network: dict, x: np.array) -> object:
     return z2
 
 
-network = init_network()
+# network = init_network()
+#
+# x = np.array([23.0])   # eg: np.array([[1, 2]]), np.array([[[1, 2, 3]]])
+# print('Input Plaintext : {}'.format(x))
+#
+# y = forward(network, x)
+# print('Decrypt text : {}'.format(y))
+cipher_text, key1 = open("Cipher_String.txt", 'r'), open("key1_String.txt", 'r')
+for i in cipher_text.readlines():
+    # assert isinstance(i, list)
+    print("Each message: ", i)
+    # print("Transfer message to numpy array: ", np.asarray(i))
 
-x = np.array([23.0])   # eg: np.array([[1, 2]]), np.array([[[1, 2, 3]]])
-print('Input Plaintext : {}'.format(x))
+for i in key1.readlines():
+    print("Each key: ", i)
+    # print("Transfer key to numpy array: ", np.asarray(i))
 
-y = forward(network, x)
-print('Decrypt text : {}'.format(y))
+
+cipher_text2, key2 = open("Cipher_Ndarray.txt", 'r'), open("key1_Ndarray.txt", 'r')
+for i in cipher_text2.readlines():
+    print("Each message in numpy array: ", i)
+
+for i in key2.readlines():
+    print("Each key in numpy array: ", i)
