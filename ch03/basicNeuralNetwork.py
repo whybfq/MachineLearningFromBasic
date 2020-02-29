@@ -12,7 +12,7 @@ import sys
 import os
 
 c = np.pi / 2  # consider to use sin()/cos() to b, need to test and design
-Bits = 1000  # hidden_size
+Bits = 10  # hidden_size
 
 
 # decorator to calculate duration taken by any function.
@@ -78,6 +78,19 @@ class OneLayerNet:  # including encryptMessage() and decryptMessage()
         return a.dot(
             np.linalg.inv(W.dot(1 / W.T))
         )  # have to use a to multiply the inverse matrix of the identity matrix
+
+    def encrypted(self, x):
+        W1, b1 = self.params['W1'], self.params['b1']
+        a1 = np.dot(x, W1) + b1
+        z1 = self.h1(a1)  # z1 is the cipher
+        makeKeyFiles("Cipher.txt", z1)  # write Cipher.txt
+
+    def decrypted(self, z1):
+        W1, b2 = self.params['W1'].T, self.params['b2']
+        a2 = np.dot(z1, 1 / W1.T) + b2
+        z2 = self.h2(a2, W1)  # z2 = np.linalg.inv(W1.dot(W2)).dot(a2) is the Decrypted text
+        # makeKeyFiles("KeyB.txt", W2)  # write keyB.txt
+        # makeKeyFiles("Decrypted.txt", z2)  # write Decrypted.txt
 
     def predict(self, x):
         W1, b1, b2 = self.params['W1'], self.params['b1'], self.params['b2']
@@ -179,7 +192,6 @@ def main():
 def new_main():
     # myMessage = """"A computer would deserve to be called intelligent if it could deceive a human into believing that it was human." -Alan Turing"""
     myMessage = "Hello"
-    myKey = ""
     myMode = "encrypt"  # set to 'encrypt' or 'decrypt'
 
     translated = ""
@@ -188,26 +200,27 @@ def new_main():
         for symbol in myMessage:
             if symbol in LETTERS:
                 message = np.array([ord(symbol)])  # eg: np.array([[1, 2]]), np.array([[[1, 2, 3]]]),
-                # print(f"Input Plaintext {Inputs}\nAnd the dimension is: {message.shape}")
                 # initialize the neural network
                 input_size, hidden_size, output_size = message.ndim, Bits, message.ndim
                 test: OneLayerNet = OneLayerNet(input_size, hidden_size, output_size)
 
-                Decrypted_text = test.predict(message)
-                Decrypted_text = chr(Decrypted_text.__int__())
+                KeyA = test.params['W1']
+                Decrypted_text = test.encrypted(message)
+                # Decrypted_text = chr(Decrypted_text.__int__())
                 # print(f'Decrypt text : {Decrypted_text}')
-                translated += Decrypted_text
+                # translated += Decrypted_text
             else:
-                translated += symbol
+                KeyB = ""
+                # translated += symbol
 
     elif myMode == 'decrypt':
         # translated = decryptMessage(myKey, myMessage)
         pass
-    print(f'Key: {myKey}')
-    print(f'{myMode.title()}ed text:')
-    print(translated)
-    pyperclip.copy(translated)
-    print(f'Full {myMode}ed text copied to clipboard.')
+    print(f'Key: {KeyA}')
+    # print(f'{myMode.title()}ed text:')
+    # print(translated)
+    # pyperclip.copy(translated)
+    # print(f'Full {myMode}ed text copied to clipboard.')
 
 
 if __name__ == '__main__':
