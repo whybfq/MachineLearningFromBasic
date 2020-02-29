@@ -12,7 +12,7 @@ import sys
 import os
 
 c = np.pi / 2  # consider to use sin()/cos() to b, need to test and design
-Bits = 100000  # hidden_size
+Bits = 1000  # hidden_size
 
 
 # decorator to calculate duration taken by any function.
@@ -42,9 +42,12 @@ LETTERS = """ !"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\]^_`ab
 
 
 def makeKeyFiles(name, matrix):
+    """
     # Creates one file 'name' with the matrix written in it
     # Our safety check will prevent us from overwriting our old key files:
     # write name (eg keyA.txt)
+    :arg name: filename
+    """
 
     if os.path.exists(name):
         print(f"WARNING: The file {name} exists! \n"
@@ -54,8 +57,7 @@ def makeKeyFiles(name, matrix):
     print(f"The matrix's dimension is {matrix.shape} ")
     print(f'Writing to file {name}...')
     fo = open(f'{name}', 'w')
-    # the content of keyA.txt
-    fo.write(f'{matrix}')
+    fo.write(f'{matrix}')  # the content of "name"(file)
     fo.close()
 
 
@@ -74,10 +76,11 @@ class OneLayerNet:  # including encryptMessage() and decryptMessage()
 
     def h2(self, a, W):  # W is the KeyA and a is the output form last layer
         return a.dot(
-            np.linalg.inv(W.dot(1 / W.T)))  # have to use a to multiply the inverse matrix of the identity matrix
+            np.linalg.inv(W.dot(1 / W.T))
+        )  # have to use a to multiply the inverse matrix of the identity matrix
 
     def predict(self, x):
-        W1, b1, b2 = self.params[ 'W1' ], self.params[ 'b1' ], self.params[ 'b2' ]
+        W1, b1, b2 = self.params['W1'], self.params['b1'], self.params['b2']
         W2 = 1 / W1.T  # W2 is from W1
         # print(
         #     "The dimension of W1 is {d1}\n"
@@ -87,8 +90,7 @@ class OneLayerNet:  # including encryptMessage() and decryptMessage()
         # )
         # print(f'b1:{b1}\nb2: {b2}')
 
-        # write keyA.txt
-        makeKeyFiles("keyA.txt", W1)
+        makeKeyFiles("keyA.txt", W1)  # write keyA.txt
 
         a1 = np.dot(x, W1) + b1
         z1 = self.h1(a1)  # z1 is the cipher
@@ -98,19 +100,7 @@ class OneLayerNet:  # including encryptMessage() and decryptMessage()
         #     "Cipher text(z1) : \n{z1}".format(a1.shape, a1=a1, z1=z1)
         # )
 
-        # write Cipher.txt
-        # if os.path.exists('Cipher.txt'):
-        #     print("WARNING: The file Cipher.txt exists! \n"
-        #           "Use a different name or delete these files and re-run this program.")
-        #     sys.exit()
-        # print()
-        # print(f"The cipher's dimension is {z1.shape} ")
-        # print('Writing cipher to Cipher.txt...')
-        # fo = open('Cipher.txt', 'w')
-        # # the content of keyA.txt
-        # fo.write(f'{z1}')
-        # fo.close()
-        makeKeyFiles("Cipher.txt", z1)
+        makeKeyFiles("Cipher.txt", z1)  # write Cipher.txt
 
         a2 = np.dot(z1, W2) + b2
         z2 = self.h2(a2, W1)  # z2 = np.linalg.inv(W1.dot(W2)).dot(a2) is the Decrypted text
@@ -122,25 +112,13 @@ class OneLayerNet:  # including encryptMessage() and decryptMessage()
         #     "And z2(Decrypt text) is: {z2}\n".format(d1=a2.shape, a2=a2, d2=z2.shape, z2=z2)
         # )
 
-        # write keyB.txt
-        # if os.path.exists('KeyB.txt'):
-        #     print("WARNING: The file KeyA.txt exists! \n"
-        #           "Use a different name or delete these files and re-run this program.")
-        #     sys.exit()
-        # print()
-        # print(f"The KeyB's dimension is {W2.shape} ")
-        # print('Writing private key to file keyB.txt...')
-        # fo = open('keyB.txt', 'w')
-        # # the content of keyB.txt
-        # fo.write(f'{W2}')
-        # fo.close()
-        makeKeyFiles("KeyB.txt", W2)
+        makeKeyFiles("KeyB.txt", W2)  # write keyB.txt
 
         return z2
 
     def checkKeys(self, keyA, keyB, mode):
-        keyA = self.params[ 'W1' ] + self.params[ 'b1' ]
-        keyB = 1 / keyA.T + self.params[ 'b1' ]
+        keyA = self.params['W1'] + self.params['b1']
+        keyB = 1 / keyA.T + self.params['b1']
         if keyA == 1 and mode == 'encrypt':
             sys.exit('The affine cipher becomes incredibly weak when key A is set to 1. Choose a different key.')
         if keyB == 0 and mode == 'encrypt':
@@ -197,7 +175,8 @@ def main():
 
 
 def new_main():
-    myMessage = """"A computer would deserve to be called intelligent if it could deceive a human into believing that it was human." -Alan Turing"""
+    # myMessage = """"A computer would deserve to be called intelligent if it could deceive a human into believing that it was human." -Alan Turing"""
+    myMessage = "Hello"
     myKey = ""
     myMode = "encrypt"  # set to 'encrypt' or 'decrypt'
 
@@ -230,4 +209,5 @@ def new_main():
 
 
 if __name__ == '__main__':
-    main()
+    # main()
+    new_main()
