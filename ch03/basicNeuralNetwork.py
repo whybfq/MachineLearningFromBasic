@@ -90,7 +90,8 @@ class OneLayerNet:  # including encryptMessage() and decryptMessage()
         # )
         # print(f'b1:{b1}\nb2: {b2}')
 
-        makeKeyFiles("keyA.txt", W1)  # write keyA.txt
+        # makeKeyFiles("keyA.txt", W1)  # write keyA.txt
+        # makeKeyFiles("KeyB.txt", W2)  # write keyB.txt
 
         a1 = np.dot(x, W1) + b1
         z1 = self.h1(a1)  # z1 is the cipher
@@ -100,11 +101,10 @@ class OneLayerNet:  # including encryptMessage() and decryptMessage()
         #     "Cipher text(z1) : \n{z1}".format(a1.shape, a1=a1, z1=z1)
         # )
 
-        makeKeyFiles("Cipher.txt", z1)  # write Cipher.txt
+        # makeKeyFiles("Cipher.txt", z1)  # write Cipher.txt
 
         a2 = np.dot(z1, W2) + b2
         z2 = self.h2(a2, W1)  # z2 = np.linalg.inv(W1.dot(W2)).dot(a2) is the Decrypted text
-
         # print(
         #     "The dimension of a2 is: {d1}\n"
         #     "And a2 is: {a2}\n"
@@ -112,7 +112,8 @@ class OneLayerNet:  # including encryptMessage() and decryptMessage()
         #     "And z2(Decrypt text) is: {z2}\n".format(d1=a2.shape, a2=a2, d2=z2.shape, z2=z2)
         # )
 
-        makeKeyFiles("KeyB.txt", W2)  # write keyB.txt
+        # makeKeyFiles("KeyB.txt", W2)  # write keyB.txt
+        # makeKeyFiles("Decrypted.txt", z2)  # write Decrypted.txt
 
         return z2
 
@@ -174,6 +175,7 @@ def main():
     pyperclip.copy(translated)
 
 
+@calculate_time
 def new_main():
     # myMessage = """"A computer would deserve to be called intelligent if it could deceive a human into believing that it was human." -Alan Turing"""
     myMessage = "Hello"
