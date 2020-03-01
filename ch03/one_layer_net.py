@@ -85,20 +85,20 @@ def forward(network: dict, x: np.array) -> object:
 #
 # y = forward(network, x)
 # print('Decrypt text : {}'.format(y))
+
+
+# test for the file
 cipher_text, key1 = open("Cipher_String.txt", 'r'), open("key1_String.txt", 'r')
-for i in cipher_text.readlines():
-    # assert isinstance(i, list)
-    print("Each message: ", i)
-    # print("Transfer message to numpy array: ", np.asarray(i))
+# for i in cipher_text.readlines():
+#     print("Each message: ", i)
+a, k = np.asarray(cipher_text.read()), np.asarray(key1.read())
+print(f"a is {a}\n key is {k}")
+# for i in key1.readlines():
+#     print("Each key: ", i)
 
-for i in key1.readlines():
-    print("Each key: ", i)
-    # print("Transfer key to numpy array: ", np.asarray(i))
-
-
-cipher_text2, key2 = open("Cipher_Ndarray.txt", 'r'), open("key1_Ndarray.txt", 'r')
-for i in cipher_text2.readlines():
-    print("Each message in numpy array: ", i)
-
-for i in key2.readlines():
-    print("Each key in numpy array: ", i)
+# cipher_text2, key2 = open("Cipher_Ndarray.txt", 'r'), open("key1_Ndarray.txt", 'r')
+# for i in cipher_text2.readlines():
+#     print("Each message in numpy array: ", i)
+#
+# for i in key2.readlines():
+#     print("Each key in numpy array: ", i)

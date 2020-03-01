@@ -211,7 +211,7 @@ def new_main():
                 # print(f'Decrypt text : {Decrypted_text}')
                 translated.append(Encrypted_text.tolist())
 
-            # else:  # need to be improved
+            # else:  # if symbol not in the LETTERS
             #     key1.append([])
             #     translated += symbol
         makeKeyFiles("key1_Ndarray.txt", np.asarray(key1))  # convert the list to a numpy array
@@ -220,8 +220,7 @@ def new_main():
         makeKeyFiles("Cipher_String.txt", translated)
 
     elif Mode == 'decrypt':
-        cipher_text = open("Cipher.txt", 'r')
-        key1 = open("key1.txt", 'r')
+        cipher_text, key1 = open("Cipher_String.txt", 'r'), open("key1_String.txt", 'r')
         # translated = decryptMessage(myKey, myMessage)
         for i in cipher_text.readline():
             assert isinstance(i, list)
