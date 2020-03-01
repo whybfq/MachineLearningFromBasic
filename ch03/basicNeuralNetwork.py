@@ -59,13 +59,13 @@ def makeKeyFiles(filename: str, matrix: np) -> np:
 
 class OneLayerNet:  # including encryptMessage() and decryptMessage()
 
-    def __init__(self, input_size: int, hidden_size: int, output_size: int, weight_init_std=0.01):
-        # initialize the weight and bias
-        self.params = dict(
-            W1=weight_init_std * np.random.randn(input_size, hidden_size),
-            b1=np.zeros(hidden_size),
-            b2=np.zeros(output_size)  # the size if the same as input_size
-        )
+    # def __init__(self, input_size: int, hidden_size: int, output_size: int, weight_init_std=0.01):
+    #     # initialize the weight and bias
+    #     self.params = dict(
+    #         W1=weight_init_std * np.random.randn(input_size, hidden_size),
+    #         b1=np.zeros(hidden_size),
+    #         b2=np.zeros(output_size)  # the size if the same as input_size
+    #     )
 
     def h1(self, x):  # activation function 1
         return x
@@ -75,14 +75,19 @@ class OneLayerNet:  # including encryptMessage() and decryptMessage()
             np.linalg.inv(W.dot(1 / W.T))
         )  # have to use a to multiply the inverse matrix of the identity matrix
 
-    def encrypted(self, x):
-        W1, b1 = self.params['W1'], self.params['b1']
-        a1 = np.dot(x, W1) + b1
-        z1 = self.h1(a1)  # z1 is the cipher
-        return z1
+    def encrypted(self, message):
+        input_size, hidden_size = message.ndim, Bits  # if only encrypted one bit then input_size=1
+        weight_init_std = 0.01
+        W1 = weight_init_std * np.random.randn(input_size, hidden_size)
+        b1 = np.zeros(hidden_size)
 
-    def decrypted(self, z1):
-        W1, b2 = self.params['W1'].T, self.params['b2']
+        a1 = np.dot(message, W1) + b1
+        z1 = self.h1(a1)  # z1 is the cipher
+        return z1, W1  # return key and cipher_text
+
+    def decrypted(self, z1, W1, output_size):
+        # output_size = message.ndim
+        b2 = np.zeros(output_size)  # the size if the same as input_size
         a2 = np.dot(z1, 1 / W1.T) + b2
         z2 = self.h2(a2, W1)  # z2 = np.linalg.inv(W1.dot(W2)).dot(a2) is the Decrypted text
         return z2
@@ -190,55 +195,39 @@ def new_main():
     Mode = "encrypt"  # set to 'encrypt' or 'decrypt'
     # Mode = "decrypt"  # set to 'encrypt' or 'decrypt'
 
-    key1, translated = [], []
     if Mode == 'encrypt':
         # translated = encryptMessage(myKey, myMessage)
         for symbol in myMessage:
-            if symbol in LETTERS:
-                message = np.array([ord(symbol)])  # eg: np.array([[1, 2]]), np.array([[[1, 2, 3]]]),
+            if symbol.upper() in LETTERS:
+                message = np.array([ ord(symbol) ])  # eg: np.array([[1, 2]]), np.array([[[1, 2, 3]]]),
                 # initialize the neural network
-                input_size, hidden_size, output_size = message.ndim, Bits, message.ndim
-                test: OneLayerNet = OneLayerNet(input_size, hidden_size, output_size)
 
-                KeyA = test.params['W1']
-                key1.append(KeyA.tolist())  # key1 is like the public key if in Asymmetric encryption
-                Encrypted_text = test.encrypted(message)
-                # Decrypted_text = chr(Decrypted_text.__int__())
-                # print(f'Decrypt text : {Decrypted_text}')
+                test: OneLayerNet = OneLayerNet()
+                keyA, Encrypted_text = test.encrypted(message)
+                key1.append(keyA.tolist())  # key1 is like the public key if in Asymmetric encryption
                 translated.append(Encrypted_text.tolist())
 
             # else:  # if symbol not in the LETTERS
             #     key1.append([])
             #     translated += symbol
-        makeKeyFiles("key1_Ndarray.txt", np.asarray(key1))  # convert the list to a numpy array
-        makeKeyFiles("Cipher_Ndarray.txt", np.asarray(translated))
+        # makeKeyFiles("key1_Ndarray.txt", np.asarray(key1))  # convert the list to a numpy array
+        # makeKeyFiles("Cipher_Ndarray.txt", np.asarray(translated))
         makeKeyFiles("key1_String.txt", key1)  # key1 is a string
         makeKeyFiles("Cipher_String.txt", translated)
 
     elif Mode == 'decrypt':
+        test: OneLayerNet = OneLayerNet()
         # translated = decryptMessage(myKey, myMessage)
         cipher_text, key1 = open("Cipher_String.txt", 'r'), open("key1_String.txt", 'r')
-        a, k = np.asarray(cipher_text.read()), np.asarray(key1.read())  # cipher_text and key will be ndarray
-        # print(f"a is {a}\nkey is {k}")
+        z1, W1 = np.asarray(cipher_text.read()), np.asarray(key1.read())  # cipher_text and key will be ndarray
+        print(f"z1 is {z1}\nW1 is {W1}, {z1.ndim}, {W1.ndim}")
 
-        for i in cipher_text.readline():
-            assert isinstance(i, list)
-            print("Each i: ", i)
-            message = np.asarray(i)
-            print("The message is ", message)
-            # test.decrypted(key1)
+        # translated = test.decrypted(z1, W1, 1)
+        # makeKeyFiles("Decrypted.txt", translated)
 
-            # initialize the neural network
-            # input_size, hidden_size, output_size = message.ndim, Bits, message.ndim
-            # test: OneLayerNet = OneLayerNet(input_size, hidden_size, output_size)
-            #
-            # KeyA = test.params['W1']
-            # key1.append(KeyA.tolist())  # key1 is like the public key if in Asymmetric encryption
-            # Decrypted_text = test.decrypted(message)
     print(f'Key1: {key1}')
-    print(f'Cipher text: {translated}')
-
-
+    # print(f'Cipher text: {translated}')
+    # print(f'Decrypted text: {translated}')
     # pyperclip.copy(translated)
     # print(f'Full {Mode}ed text copied to clipboard.')
 
