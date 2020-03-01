@@ -11,8 +11,12 @@ import pyperclip
 import sys
 import os
 
-c = np.pi / 2  # consider to use sin()/cos() to b, need to test and design
+# every possible symbol that can be encrypted
+# LETTERS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"  # if only consider 26 English alphabets
+# consider more situations, note the space at the front
+LETTERS = """ !"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\]^_`abcdefghijklmnopqrstuvwxyz{|}~"""
 Bits = 3  # hidden_size
+# c = np.pi / 2  # consider to use sin()/cos() to b, need to test and design
 
 
 # decorator to calculate duration taken by any function.
@@ -31,14 +35,6 @@ def calculate_time(func):
         print(f"{func.__name__} function total time taken in : {end - begin} seconds")
 
     return inner1
-
-
-# every possible symbol that can be encrypted
-# LETTERS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"  # if only consider 26 English alphabets
-LETTERS = """ !"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\]^_`abcdefghijklmnopqrstuvwxyz{|}~"""
-
-
-# note the space at the front
 
 
 def makeKeyFiles(filename: str, matrix: np) -> np:
@@ -220,8 +216,11 @@ def new_main():
         makeKeyFiles("Cipher_String.txt", translated)
 
     elif Mode == 'decrypt':
-        cipher_text, key1 = open("Cipher_String.txt", 'r'), open("key1_String.txt", 'r')
         # translated = decryptMessage(myKey, myMessage)
+        cipher_text, key1 = open("Cipher_String.txt", 'r'), open("key1_String.txt", 'r')
+        a, k = np.asarray(cipher_text.read()), np.asarray(key1.read())  # cipher_text and key will be ndarray
+        # print(f"a is {a}\nkey is {k}")
+
         for i in cipher_text.readline():
             assert isinstance(i, list)
             print("Each i: ", i)

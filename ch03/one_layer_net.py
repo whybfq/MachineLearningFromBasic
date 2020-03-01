@@ -92,7 +92,7 @@ cipher_text, key1 = open("Cipher_String.txt", 'r'), open("key1_String.txt", 'r')
 # for i in cipher_text.readlines():
 #     print("Each message: ", i)
 a, k = np.asarray(cipher_text.read()), np.asarray(key1.read())
-print(f"a is {a}\n key is {k}")
+print(f"a is {a}\nkey is {k}")
 # for i in key1.readlines():
 #     print("Each key: ", i)
 
