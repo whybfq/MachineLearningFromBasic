@@ -152,7 +152,7 @@ def main():
     if Mode == 'encrypt':
         for symbol in myMessage:
             if symbol.upper() in LETTERS:
-                message = np.array([ ord(symbol) ])  # eg: np.array([[1, 2]]), np.array([[[1, 2, 3]]]),
+                message = np.array([ord(symbol)])  # eg: np.array([[1, 2]]), np.array([[[1, 2, 3]]]),
 
                 # initialize the neural network
                 test: OneLayerNet = OneLayerNet()
@@ -170,7 +170,7 @@ def main():
                     for i in j:
                         translated.append(i)
             else:  # if symbol not in the LETTERS
-                key1.append([ ])
+                key1.append([])
                 translated.append(symbol)
 
         makeKeyFiles("key1_Ndarray.txt", np.asarray(key1))  # convert the list to a numpy array
