@@ -15,7 +15,7 @@ import os
 # LETTERS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"  # if only consider 26 English alphabets
 # consider more situations, note the space at the front
 LETTERS = """ !"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\]^_`abcdefghijklmnopqrstuvwxyz{|}~"""
-Bits = 3  # hidden_size
+Bits = 5  # hidden_size
 # c = np.pi / 2  # consider to use sin()/cos() to b, need to test and design
 
 
@@ -44,10 +44,10 @@ def makeKeyFiles(filename: str, matrix: np) -> np:
     # write name (eg keyA.txt)
     :arg name: filename
     """
-    if os.path.exists(filename):
-        print(f"WARNING: The file {filename} exists!  "
-              "Use a different name or delete these files and re-run this program.")
-        sys.exit()
+    # if os.path.exists(filename):
+    #     print(f"WARNING: The file {filename} exists!  "
+    #           "Use a different name or delete these files and re-run this program.")
+    #     sys.exit()
     print()
     if type(matrix) is np.ndarray:  # if isinstance(matrix, np.ndarray)
         print(f"The matrix's dimension is {matrix.shape} ")
@@ -85,10 +85,10 @@ class OneLayerNet:  # including encryptMessage() and decryptMessage()
         z1 = self.h1(a1)  # z1 is the cipher
         return z1, W1  # return key and cipher_text
 
-    def decrypted(self, z1, W1, output_size):
-        # output_size = message.ndim
+    def decrypted(self, z1, W1):
+        output_size = 1  # output_size = message.ndim
         b2 = np.zeros(output_size)  # the size if the same as input_size
-        a2 = np.dot(z1, 1 / W1.T) + b2
+        a2 = np.dot(z1, (1 / W1.T)) + b2
         z2 = self.h2(a2, W1)  # z2 = np.linalg.inv(W1.dot(W2)).dot(a2) is the Decrypted text
         return z2
 
@@ -146,7 +146,7 @@ def main():
     # myMessage = """"A computer would deserve to be called intelligent if it could deceive a human into believing that it was human." -Alan Turing"""
     myMessage = "Hi"
     Mode = "encrypt"  # set to 'encrypt' or 'decrypt'
-    # Mode = "decrypt"  # set to 'encrypt' or 'decrypt'
+    Mode = "decrypt"  # set to 'encrypt' or 'decrypt'
 
     key1, translated = [], []
     if Mode == 'encrypt':
@@ -197,8 +197,8 @@ def main():
         # print(f"Cipher text: {cipher[ 0:Bits ]}\nKey is: {key[ 0:Bits ]}")
         i, plaintext = 0, ""
         while i < len(key1):  # len(key1) is equal to len(translated)
-            cipher = np.array(translated[ i:i + Bits ])
-            key = np.array([ key1[ i: i + Bits ] ])
+            cipher = np.array(translated[i:i + Bits ])
+            key = np.array([key1[i: i + Bits]])
             plaintext += chr(test.decrypted(z1=cipher, W1=key).__int__())  # convert numpy.array to int then to chr()
             i += Bits
         print(f"The plaintext is {plaintext}")
