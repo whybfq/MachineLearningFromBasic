@@ -148,7 +148,7 @@ def main():
     Mode = "encrypt"  # set to 'encrypt' or 'decrypt'
     # Mode = "decrypt"  # set to 'encrypt' or 'decrypt'
 
-    key1, translated = [ ], [ ]
+    key1, translated = [], []
     if Mode == 'encrypt':
         for symbol in myMessage:
             if symbol.upper() in LETTERS:
