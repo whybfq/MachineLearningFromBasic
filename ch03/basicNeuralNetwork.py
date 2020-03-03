@@ -143,16 +143,6 @@ class OneLayerNet:  # including encryptMessage() and decryptMessage()
 
         return z2
 
-    def checkKeys(self, keyA, keyB, mode):
-        keyA = self.params['W1'] + self.params['b1']
-        keyB = 1 / keyA.T + self.params['b1']
-        if keyA == 1 and mode == 'encrypt':
-            sys.exit('The affine cipher becomes incredibly weak when key A is set to 1. Choose a different key.')
-        if keyB == 0 and mode == 'encrypt':
-            sys.exit('The affine cipher becomes incredibly weak when key B is set to 0. Choose a different key.')
-        # if keyA < 0 or keyB < 0 or keyB > len(LETTERS) - 1:
-        #     sys.exit('Key A must be greater than 0 and Key B must be between 0 and %s.' % (len(LETTERS) - 1))
-
 
 @calculate_time
 def main():
