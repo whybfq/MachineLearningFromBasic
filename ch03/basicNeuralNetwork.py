@@ -143,10 +143,10 @@ class OneLayerNet:  # including encryptMessage() and decryptMessage()
 
 @calculate_time
 def main():
+    myMessage = open("Input.txt").read()
     # myMessage = """"A computer would deserve to be called intelligent if it could deceive a human into believing that it was human." -Alan Turing"""
-    myMessage = "Hi"
     Mode = "encrypt"  # set to 'encrypt' or 'decrypt'
-    Mode = "decrypt"  # set to 'encrypt' or 'decrypt'
+    # Mode = "decrypt"  # set to 'encrypt' or 'decrypt'
 
     key1, translated = [], []
     if Mode == 'encrypt':
