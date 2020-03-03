@@ -143,95 +143,76 @@ class OneLayerNet:  # including encryptMessage() and decryptMessage()
 
 @calculate_time
 def main():
-    """the main process"""
-    translated = ""  # stores the encrypted/decrypted form of the message
-    # tells the program to encrypt or decrypt
-    mode = "encrypt"  # set to 'encrypt' or 'decrypt' mode
-
-    # message = np.array([*string.ascii_lowercase])[3]  #  array(['d'], dtype='<U1')
-    Inputs = "a"  # ord('a')->97,  chr(97)->a
-    # Inputs = Inputs.upper()  # capitalize the string in message if only consider 26 big alphabets
-    print(f"Input Plaintext {Inputs}")
-
-    # run the encryption/decryption code on each symbol in the message string
-    for symbol in Inputs:
-        if symbol in LETTERS:
-            message = np.array([ ord(symbol) ])  # eg: np.array([[1, 2]]), np.array([[[1, 2, 3]]]),
-            # print(f"Input Plaintext {Inputs}\nAnd the dimension is: {message.shape}")
-
-            if mode == "encrypt":
-                # initialize the neural network
-                input_size, hidden_size, output_size = message.ndim, Bits, message.ndim
-                test: OneLayerNet = OneLayerNet(input_size, hidden_size, output_size)
-
-                Decrypted_text = test.predict(message)
-                Decrypted_text = chr(Decrypted_text.__int__())
-                # print(f'Decrypt text : {Decrypted_text}')
-
-            # elif mode == 'decrypt':
-            #     pass
-
-            else:
-                print('mode can only be encrypt or decrypt!')
-
-            # add encrypted/decrypted number's symbol at the end of translated
-            translated += Decrypted_text
-
-        else:
-            # just add the symbol without encrypting/decrypting
-            translated += symbol
-
-    # print the encrypted/decrypted string to the screen
-    print(f"The cracking code is {translated} ")
-
-    # copy the encrypted/decrypted string to the clipboard
-    pyperclip.copy(translated)
-
-
-@calculate_time
-def new_main():
     # myMessage = """"A computer would deserve to be called intelligent if it could deceive a human into believing that it was human." -Alan Turing"""
     myMessage = "Hi"
     Mode = "encrypt"  # set to 'encrypt' or 'decrypt'
     # Mode = "decrypt"  # set to 'encrypt' or 'decrypt'
 
+    key1, translated = [ ], [ ]
     if Mode == 'encrypt':
-        # translated = encryptMessage(myKey, myMessage)
         for symbol in myMessage:
             if symbol.upper() in LETTERS:
                 message = np.array([ ord(symbol) ])  # eg: np.array([[1, 2]]), np.array([[[1, 2, 3]]]),
-                # initialize the neural network
 
+                # initialize the neural network
                 test: OneLayerNet = OneLayerNet()
                 keyA, Encrypted_text = test.encrypted(message)
-                key1.append(keyA.tolist())  # key1 is like the public key if in Asymmetric encryption
-                translated.append(Encrypted_text.tolist())
+                print(f"keyA(W1) is {keyA}\n"
+                      f"And its dimension is {keyA.ndim}\n"
+                      f"And its shape is {keyA.shape}\n"
+                      f"Encrypted_text(z1) is {Encrypted_text}\n"
+                      f"And its dimension is {Encrypted_text.ndim}\n"
+                      f"And z1's shape is {Encrypted_text.shape}")
 
-            # else:  # if symbol not in the LETTERS
-            #     key1.append([])
-            #     translated += symbol
-        # makeKeyFiles("key1_Ndarray.txt", np.asarray(key1))  # convert the list to a numpy array
-        # makeKeyFiles("Cipher_Ndarray.txt", np.asarray(translated))
-        makeKeyFiles("key1_String.txt", key1)  # key1 is a string
-        makeKeyFiles("Cipher_String.txt", translated)
+                for i in keyA:  # key.extend(i for i in keyA)
+                    key1.append(i)
+                for j in Encrypted_text:  # need to be improved to dimensions
+                    for i in j:
+                        translated.append(i)
+            else:  # if symbol not in the LETTERS
+                key1.append([ ])
+                translated.append(symbol)
+
+        makeKeyFiles("key1_Ndarray.txt", np.asarray(key1))  # convert the list to a numpy array
+        makeKeyFiles("Cipher_Ndarray.txt", np.asarray(translated))
+        makeKeyFiles("key1_String.txt", ' '.join([ str(elem) for elem in key1 ]))  # convert the list to string
+        makeKeyFiles("Cipher_String.txt", ' '.join(map(str, translated)))  # convert the list to string
+        makeKeyFiles("key1_list.txt", key1)
+        makeKeyFiles("Cipher_list.txt", translated)
 
     elif Mode == 'decrypt':
         test: OneLayerNet = OneLayerNet()
-        # translated = decryptMessage(myKey, myMessage)
-        cipher_text, key1 = open("Cipher_String.txt", 'r'), open("key1_String.txt", 'r')
-        z1, W1 = np.asarray(cipher_text.read()), np.asarray(key1.read())  # cipher_text and key will be ndarray
-        print(f"z1 is {z1}\nW1 is {W1}, {z1.ndim}, {W1.ndim}")
+        # after open the file, remove the "[" and "]" in the beginning and end of the string
+        cipher_text, key = open("key1_list.txt", 'r').read().replace('[', '').replace(']', ''), \
+                           open("Cipher_list.txt", 'r').read().replace('[', '').replace(']', '')
+        for i in cipher_text.split(", "):
+            translated.append(float(i))  # float() to convert string to list
+        for j in key.split(", "):
+            key1.append(float(j))
 
-        # translated = test.decrypted(z1, W1, 1)
-        # makeKeyFiles("Decrypted.txt", translated)
+        print(f"You input :\nz1(cipher) is {translated}\nW1(key) is {key1}")
 
-    print(f'Key1: {key1}')
-    # print(f'Cipher text: {translated}')
-    # print(f'Decrypted text: {translated}')
+        # cipher = np.array([0.4309343925444561, -0.40563050290909614, 0.7161005261005042])  # Bits = 3
+        # key = np.array([[0.0056701893755849485, -0.005337243459330212, 0.009422375343427688]])
+        # print(f"Cipher text: {cipher[ 0:Bits ]}\nKey is: {key[ 0:Bits ]}")
+        i, plaintext = 0, ""
+        while i < len(key1):  # len(key1) is equal to len(translated)
+            cipher = np.array(translated[ i:i + Bits ])
+            key = np.array([ key1[ i: i + Bits ] ])
+            plaintext += chr(test.decrypted(z1=cipher, W1=key).__int__())  # convert numpy.array to int then to chr()
+            i += Bits
+        print(f"The plaintext is {plaintext}")
+        makeKeyFiles("Decrypted.txt", plaintext)
+        translated = plaintext
+
+    print(f'Key1: {key1}')  # key1 will be W1
+    # if mode == 'encrypt', translated will be z1(cipher text)
+    # if mode == 'decrypt', translated will be z2(plaintext)
+    print(f'Translated text: {translated}')
+    # copy the encrypted/decrypted string to the clipboard
+    # print("already copied to the clipboard of translated!")
     # pyperclip.copy(translated)
-    # print(f'Full {Mode}ed text copied to clipboard.')
 
 
 if __name__ == '__main__':
-    # main()
-    new_main()
+    main()
