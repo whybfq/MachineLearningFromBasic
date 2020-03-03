@@ -105,43 +105,43 @@ class OneLayerNet:  # including encryptMessage() and decryptMessage()
         z2 = self.h2(a2, W1)  # z2 = np.linalg.inv(W1.dot(W2)).dot(a2) is the Decrypted text
         return z2
 
-    def predict(self, x):
-        W1, b1, b2 = self.params['W1'], self.params['b1'], self.params['b2']
-        W2 = 1 / W1.T  # W2 is from W1
-        # print(
-        #     "The dimension of W1 is {d1}\n"
-        #     "And W1(keyA) is: {W1}\n"
-        #     "The dimension of W2 is {d2}\n"
-        #     "And W2(keyB) is: {W2}".format(d1=W1.shape, W1=W1, d2=W2.shape, W2=W2)
-        # )
-        # print(f'b1:{b1}\nb2: {b2}')
-
-        # makeKeyFiles("keyA.txt", W1)  # write keyA.txt
-        # makeKeyFiles("KeyB.txt", W2)  # write keyB.txt
-
-        a1 = np.dot(x, W1) + b1
-        z1 = self.h1(a1)  # z1 is the cipher
-        # print(
-        #     # "The dimension of a1 is: {}\n"
-        #     # "And a1 is: {a1}"
-        #     "Cipher text(z1) : \n{z1}".format(a1.shape, a1=a1, z1=z1)
-        # )
-
-        # makeKeyFiles("Cipher.txt", z1)  # write Cipher.txt
-
-        a2 = np.dot(z1, W2) + b2
-        z2 = self.h2(a2, W1)  # z2 = np.linalg.inv(W1.dot(W2)).dot(a2) is the Decrypted text
-        # print(
-        #     "The dimension of a2 is: {d1}\n"
-        #     "And a2 is: {a2}\n"
-        #     "The dimension of z2 is {d2}\n"
-        #     "And z2(Decrypt text) is: {z2}\n".format(d1=a2.shape, a2=a2, d2=z2.shape, z2=z2)
-        # )
-
-        # makeKeyFiles("KeyB.txt", W2)  # write keyB.txt
-        # makeKeyFiles("Decrypted.txt", z2)  # write Decrypted.txt
-
-        return z2
+    # def predict(self, x):
+    #     W1, b1, b2 = self.params['W1'], self.params['b1'], self.params['b2']
+    #     W2 = 1 / W1.T  # W2 is from W1
+    #     # print(
+    #     #     "The dimension of W1 is {d1}\n"
+    #     #     "And W1(keyA) is: {W1}\n"
+    #     #     "The dimension of W2 is {d2}\n"
+    #     #     "And W2(keyB) is: {W2}".format(d1=W1.shape, W1=W1, d2=W2.shape, W2=W2)
+    #     # )
+    #     # print(f'b1:{b1}\nb2: {b2}')
+    #
+    #     # makeKeyFiles("keyA.txt", W1)  # write keyA.txt
+    #     # makeKeyFiles("KeyB.txt", W2)  # write keyB.txt
+    #
+    #     a1 = np.dot(x, W1) + b1
+    #     z1 = self.h1(a1)  # z1 is the cipher
+    #     # print(
+    #     #     # "The dimension of a1 is: {}\n"
+    #     #     # "And a1 is: {a1}"
+    #     #     "Cipher text(z1) : \n{z1}".format(a1.shape, a1=a1, z1=z1)
+    #     # )
+    #
+    #     # makeKeyFiles("Cipher.txt", z1)  # write Cipher.txt
+    #
+    #     a2 = np.dot(z1, W2) + b2
+    #     z2 = self.h2(a2, W1)  # z2 = np.linalg.inv(W1.dot(W2)).dot(a2) is the Decrypted text
+    #     # print(
+    #     #     "The dimension of a2 is: {d1}\n"
+    #     #     "And a2 is: {a2}\n"
+    #     #     "The dimension of z2 is {d2}\n"
+    #     #     "And z2(Decrypt text) is: {z2}\n".format(d1=a2.shape, a2=a2, d2=z2.shape, z2=z2)
+    #     # )
+    #
+    #     # makeKeyFiles("KeyB.txt", W2)  # write keyB.txt
+    #     # makeKeyFiles("Decrypted.txt", z2)  # write Decrypted.txt
+    #
+    #     return z2
 
 
 @calculate_time
