@@ -61,9 +61,13 @@ def compareFiles(file1, file2):
     """
     :type file1: str
     :type file2: str
-    :return
+    :return: some message
     """
-    pass
+    data1, data2 = open(file1, 'r').read(), open(file2, 'r').read()
+    if data1 == data2:
+        print(f"The {file1} and {file2} are same!")
+    else:
+        print(f"The {file1} and {file2} are different!")
 
 
 class OneLayerNet:  # including encryptMessage() and decryptMessage()
@@ -154,8 +158,8 @@ class OneLayerNet:  # including encryptMessage() and decryptMessage()
 def main():
     myMessage = open("Input.txt").read()
     # myMessage = """"A computer would deserve to be called intelligent if it could deceive a human into believing that it was human." -Alan Turing"""
-    Mode = "encrypt"  # set to 'encrypt' or 'decrypt'
-    # Mode = "decrypt"  # set to 'encrypt' or 'decrypt'
+    # Mode = "encrypt"  # set to 'encrypt' or 'decrypt'
+    Mode = "decrypt"  # set to 'encrypt' or 'decrypt'
 
     key1, translated = [], []
     if Mode == 'encrypt':
