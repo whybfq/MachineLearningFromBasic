@@ -169,6 +169,7 @@ def main():
                 for j in Encrypted_text:  # need to be improved to dimensions
                     for i in j:
                         translated.append(i)
+
             else:  # if symbol not in the LETTERS
                 key1.append([])
                 translated.append(symbol)
@@ -196,6 +197,7 @@ def main():
         # key = np.array([[0.0056701893755849485, -0.005337243459330212, 0.009422375343427688]])
         # print(f"Cipher text: {cipher[ 0:Bits ]}\nKey is: {key[ 0:Bits ]}")
         i, plaintext = 0, ""
+        # main process to decrypt each every character
         while i < len(key1):  # len(key1) is equal to len(translated)
             cipher = np.array(translated[i:i + Bits ])
             key = np.array([key1[i: i + Bits]])
