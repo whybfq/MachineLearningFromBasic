@@ -151,7 +151,7 @@ def main():
     key1, translated = [], []
     if Mode == 'encrypt':
         for symbol in myMessage:
-            if symbol.upper() in LETTERS:
+            if symbol in LETTERS:
                 message = np.array([ord(symbol)])  # eg: np.array([[1, 2]]), np.array([[[1, 2, 3]]]),
 
                 # initialize the neural network
