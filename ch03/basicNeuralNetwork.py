@@ -57,6 +57,15 @@ def makeKeyFiles(filename: str, matrix: np) -> np:
     fo.close()
 
 
+def compareFiles(file1, file2):
+    """
+    :type file1: str
+    :type file2: str
+    :return
+    """
+    pass
+
+
 class OneLayerNet:  # including encryptMessage() and decryptMessage()
 
     # def __init__(self, input_size: int, hidden_size: int, output_size: int, weight_init_std=0.01):
@@ -199,13 +208,17 @@ def main():
         i, plaintext = 0, ""
         # main process to decrypt each every character
         while i < len(key1):  # len(key1) is equal to len(translated)
-            cipher = np.array(translated[i:i + Bits ])
+            cipher = np.array(translated[i:i + Bits])
             key = np.array([key1[i: i + Bits]])
             plaintext += chr(test.decrypted(z1=cipher, W1=key).__int__())  # convert numpy.array to int then to chr()
             i += Bits
         print(f"The plaintext is {plaintext}")
         makeKeyFiles("Decrypted.txt", plaintext)
+        compareFiles("Input.txt", "Decrypted.txt")
         translated = plaintext
+
+    else:
+        print('mode can only be encrypt or decrypt!')
 
     print(f'Key1: {key1}')  # key1 will be W1
     # if mode == 'encrypt', translated will be z1(cipher text)
