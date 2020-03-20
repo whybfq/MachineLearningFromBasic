@@ -2,7 +2,6 @@ import numpy as np
 import string
 import pyperclip
 
-c = np.pi / 2
 Bits = 100000  # hidden_size
 
 
@@ -57,10 +56,9 @@ class OneLayerNet:
 
 # message = np.array([*string.ascii_lowercase])[3]  #  array(['d'], dtype='<U1')
 # Inputs = 'a'  # ord('a')->97,  chr(97)->a
-# capitalize the string in message
-# Inputs = Inputs.upper()
 # numbers = [ord(letter) for letter in Inputs]
-message = np.array([[1, 2 ]])   # eg: np.array([[1, 2]]), np.array([[[1, 2, 3]]])
+
+message = np.array([[1, 2]])   # eg: np.array([[1, 2]]), np.array([[[1, 2, 3]]])
 print("Input Plaintext {}\nAnd the dimension is: {}".format(message, message.shape))
 
 

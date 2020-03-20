@@ -4,8 +4,8 @@ one_layer_two_points.py (BSD Licensed)
 © 2020 (littlesanner@gmail.com)
 """
 import numpy as np
+import qrcode
 
-c = np.pi / 2
 Bits = 10  # hidden_size
 
 
@@ -91,20 +91,3 @@ print(f'Input Plaintext : {x}')
 
 y = forward(network, x)
 print(f'Decrypt text : {y}')
-
-
-# test for the file
-# cipher_text, key1 = open("Cipher_String.txt", 'r'), open("key1_String.txt", 'r')
-# for i in cipher_text.readlines():
-#     print("Each message: ", i)
-# a, k = np.asarray(cipher_text.read()), np.asarray(key1.read())
-# print(f"a is {a}\nkey is {k}")
-# for i in key1.readlines():
-#     print("Each key: ", i)
-
-# cipher_text2, key2 = open("Cipher_Ndarray.txt", 'r'), open("key1_Ndarray.txt", 'r')
-# for i in cipher_text2.readlines():
-#     print("Each message in numpy array: ", i)
-#
-# for i in key2.readlines():
-#     print("Each key in numpy array: ", i)
