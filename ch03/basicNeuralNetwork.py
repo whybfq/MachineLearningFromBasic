@@ -7,16 +7,10 @@ version: 0.0.1
 
 import time
 import numpy as np
-import pyperclip
-import sys
-import os
 
 # every possible symbol that can be encrypted
-# LETTERS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"  # if only consider 26 English alphabets
-# consider more situations, note the space at the front
 LETTERS = """ !"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\]^_`abcdefghijklmnopqrstuvwxyz{|}~"""
 Bits = 5  # hidden_size
-# c = np.pi / 2  # consider to use sin()/cos() to b, need to test and design
 
 
 # decorator to calculate duration taken by any function.
