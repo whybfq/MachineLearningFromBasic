@@ -3,6 +3,12 @@ import numpy as np
 import matplotlib.pylab as plt
 
 
+def softmax(a):
+    exp_a = np.exp(a)
+    sum_exp_a = np.sum(exp_a)
+    return exp_a / sum_exp_a
+
+
 def sigmoid(x):
     return 1 / (1 + np.exp(-x))    
 
@@ -12,5 +18,3 @@ def sigmoid(x):
 # plt.plot(X, Y)
 # plt.ylim(-0.1, 1.1)
 # plt.show()
-
-print(sigmoid(1))
