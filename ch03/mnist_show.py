@@ -1,10 +1,9 @@
 # coding: utf-8
-import os
-import sys
-
-sys.path.append(os.pardir)  # 为了导入父目录的文件而进行的设定
+import os, sys
 import numpy as np
-from dataset.mnist import load_mnist
+
+# sys.path.append(os.pardir)  # 为了导入父目录的文件而进行的设定
+from mnist import load_mnist
 from PIL import Image
 
 
