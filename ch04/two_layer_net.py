@@ -90,6 +90,55 @@ def numerical_gradient(f, x):
     return grad
 
 
+class Adam:
+    """Adam (http://arxiv.org/abs/1412.6980v8)"""
+
+    def __init__(self, lr=0.001, beta1=0.9, beta2=0.999):
+        self.lr = lr
+        self.beta1 = beta1
+        self.beta2 = beta2
+        self.iter = 0
+        self.m = None
+        self.v = None
+
+    def update(self, params, grads):
+        if self.m is None:
+            self.m, self.v = {}, {}
+            for key, val in params.items():
+                self.m[ key ] = np.zeros_like(val)
+                self.v[ key ] = np.zeros_like(val)
+
+        self.iter += 1
+        lr_t = self.lr * np.sqrt(1.0 - self.beta2 ** self.iter) / (1.0 - self.beta1 ** self.iter)
+
+        for key in params.keys():
+            # self.m[key] = self.beta1*self.m[key] + (1-self.beta1)*grads[key]
+            # self.v[key] = self.beta2*self.v[key] + (1-self.beta2)*(grads[key]**2)
+            self.m[ key ] += (1 - self.beta1) * (grads[ key ] - self.m[ key ])
+            self.v[ key ] += (1 - self.beta2) * (grads[ key ] ** 2 - self.v[ key ])
+
+            params[ key ] -= lr_t * self.m[ key ] / (np.sqrt(self.v[ key ]) + 1e-7)
+
+            # unbias_m += (1 - self.beta1) * (grads[key] - self.m[key]) # correct bias
+            # unbisa_b += (1 - self.beta2) * (grads[key]*grads[key] - self.v[key]) # correct bias
+            # params[key] += self.lr * unbias_m / (np.sqrt(unbisa_b) + 1e-7)
+
+
+class simpleNet:
+    def __init__(self):
+        self.W = np.random.randn(2, 3)
+
+    def predict(self, x):
+        return np.dot(x, self.W)
+
+    def loss(self, x, t):
+        z = self.predict(x)
+        y = softmax(z)
+        loss = cross_entropy_error(y, t)
+
+        return loss
+
+
 class TwoLayerNet:
 
     def __init__(self, input_size, hidden_size, output_size, weight_init_std=0.01):
@@ -113,7 +162,7 @@ class TwoLayerNet:
     def loss(self, x, t):
         y = self.predict(x)
         
-        return cross_entropy_error(y, t)
+        return mean_squared_error(y, t)
     
     def accuracy(self, x, t):
         y = self.predict(x)
@@ -162,7 +211,12 @@ class TwoLayerNet:
 
 
 if __name__ == '__main__':
-    net = TwoLayerNet(input_size=784,hidden_size=100, output_size=10)
-    x = np.random.rand(100, 784)
-    y = net.predict(x)
-    print(y)
+    # net = TwoLayerNet(input_size=784,hidden_size=100, output_size=10)
+    # x = np.random.rand(100, 784)
+    # y = net.predict(x)
+    # print(y)
+    net1 = simpleNet()
+    print(net1.W)
+    x = np.array([0.6, 0.9])
+    p = net1.predict(x)
+    print(p)
