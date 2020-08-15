@@ -141,27 +141,30 @@ class simpleNet:
 
 class TwoLayerNet:
 
-    def __init__(self, input_size, hidden_size, output_size, weight_init_std=0.01):
+    def __init__(self, input_size, hidden_size, output_size, weight_init_std=1):
         # 初始化权重
-        self.params = {'W1': weight_init_std * np.random.randn(input_size, hidden_size), 'b1': np.zeros(hidden_size),
-                       'W2': weight_init_std * np.random.randn(hidden_size, output_size), 'b2': np.zeros(output_size)}
+        self.params = dict(W1=weight_init_std * np.random.randn(input_size, hidden_size), b1=np.zeros(hidden_size),
+                           W2=weight_init_std * np.random.randn(hidden_size, output_size), b2=np.zeros(output_size))
 
     def predict(self, x):
-        W1, W2 = self.params['W1'], self.params['W2']
+        W1 = self.params['W1']
+        W2 = W1.T
         b1, b2 = self.params['b1'], self.params['b2']
     
         a1 = np.dot(x, W1) + b1
-        z1 = sigmoid(a1)
+        z1 = relu(a1)
 
         a2 = np.dot(z1, W2) + b2
-        y = softmax(a2)
+        # def h2(a, W1, W2):  # W is the KeyA and a is the output form last layer
+        #     return a.dot(np.linalg.inv(W1.dot(W2))) # ! use 'a' to multiply the inverse matrix of the identity matrix
+        y = a2.dot(np.linalg.inv(W1.dot(W2)))
+
         
         return y
         
     # x:输入数据, t:监督数据
     def loss(self, x, t):
         y = self.predict(x)
-        
         return mean_squared_error(y, t)
     
     def accuracy(self, x, t):
@@ -211,12 +214,18 @@ class TwoLayerNet:
 
 
 if __name__ == '__main__':
-    # net = TwoLayerNet(input_size=784,hidden_size=100, output_size=10)
-    # x = np.random.rand(100, 784)
-    # y = net.predict(x)
-    # print(y)
-    net1 = simpleNet()
-    print(net1.W)
-    x = np.array([0.6, 0.9])
-    p = net1.predict(x)
-    print(p)
+    # test simpleNet()
+    # net1 = simpleNet()
+    # print(net1.W)
+    # x = np.array([ 0.6, 0.9 ])
+    # p = net1.predict(x)
+    # print(p)
+
+    # test TwoLayerNet
+    net = TwoLayerNet(input_size=4, hidden_size=5, output_size=4)
+    print(f"W1 is {net.params['W1']}")
+    x = np.array([[72., 101.,  2.,   5] ])
+    t = x  # the tag is the data itself
+    print(f'input is {x}')
+    y = net.predict(x)
+    print(y)
